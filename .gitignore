@@ -1,0 +1,19 @@
+# Visual Studio Temp Files
+.vs/
+Debug/
+Release/
+x64/
+*.user
+*.aps
+*.pdb
+*.obj
+*.log
+*.tlog
+*.lastbuildstate
+*.idb
+*.exe
+*.recipe
+*.ilk
+*.ipch
+*.sdf
+*.sln.doccontainers
