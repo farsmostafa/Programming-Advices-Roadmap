@@ -14,11 +14,19 @@ int ReadPositiveNumber(string message)
     return number;
 }
 
-
+int ReverseNumber(int number){
+    int reversedNumber=0;
+    while (number !=0)
+    {
+        reversedNumber = reversedNumber*10 + number%10;
+        number/=10;
+    }
+    return reversedNumber;
+}
 
 void printDigits(int number){
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
-    cout << "Reversed Number Digits of Number [ " << number << " ] are : [  "; 
+    cout << "Number Digits of Number [ " << number << " ] in Same order are : [  "; 
     short remainder;
     while (number >0)
     {
@@ -34,8 +42,10 @@ void printDigits(int number){
 int main()
 {
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
-    cout << "\n\nProblem #05 : Write a Program to read a number and print it in a reversed order \n";
-    cout << "\tex  : 1234 => 4 3 2 1\n\n";
-    printDigits(ReadPositiveNumber("Enter Positive Number : "));
+    cout << "Problem #05 : Write a program to read a number and print it in order from left to right.\n";
+    cout << "\tex  : 1234 =>  1  2  3  4\n\n";
+
+    int number = ReadPositiveNumber("Enter Positive Number : ");
+    printDigits(ReverseNumber(number));
     return 0;
 }
