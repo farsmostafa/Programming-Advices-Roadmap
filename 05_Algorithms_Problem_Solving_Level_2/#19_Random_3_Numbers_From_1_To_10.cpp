@@ -31,13 +31,19 @@ int RandomNumber(int From, int To)
     return randNum; 
 }
 
+void printResult(){
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "1-RandomNumber : " << RandomNumber(1,10)<<endl;
+    cout << "2-RandomNumber : " << RandomNumber(1,10)<<endl;
+    cout << "3-RandomNumber : " << RandomNumber(1,10)<<endl;
+    cout << "\n-------------------------------------------------------------------------------------------------\n\n";
+}
 
 int main()
 {
     srand((unsigned)time(NULL));
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
-    cout << "Problem #05 : \n";
-    cout <<"\tex  : \n\n";
-    ReadPositiveNumber("Enter Positive Number : ");
+    cout << "Problem #05 : Write a program to print 3 random numbers from 1 to 10\n";
+    printResult();
     return 0;
 }
