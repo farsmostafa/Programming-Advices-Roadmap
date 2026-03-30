@@ -327,7 +327,7 @@ int MyPower(int base, int power)
 
 int main()
 {
-    cout << MyPower(2, 4) <<div endl; // النتيجة: 16
+    cout << MyPower(2, 4) << endl; // النتيجة: 16
     return 0;
 }
 
