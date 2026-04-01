@@ -38,8 +38,8 @@
 <div dir="ltr">
 
 ```cpp
-// 🚨 هذا السطر إجباري لتفادي توقف البرنامج في Visual Studio
 #pragma warning(disable : 4996)
+// 🚨 هذا السطر إجباري لتفادي توقف البرنامج في Visual Studio
 
 #include <iostream>
 #include <ctime> // Library الخاصة بالوقت والتاريخ
@@ -102,8 +102,9 @@ int main()
 <div dir="ltr">
 
 ```cpp
-// 🚨 هذا السطر إجباري لتفادي توقف البرنامج في Visual Studio
+
 #pragma warning(disable : 4996)
+// 🚨 هذا السطر إجباري لتفادي توقف البرنامج في Visual Studio
 
 #include <iostream>
 #include <ctime>
@@ -140,6 +141,7 @@ int main()
 
     return 0;
 }
+
 ```
 
 </div>
