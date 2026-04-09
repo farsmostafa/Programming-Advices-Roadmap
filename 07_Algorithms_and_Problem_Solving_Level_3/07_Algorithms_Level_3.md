@@ -1543,4 +1543,472 @@ int main()
 
 • إصلاح الأخطاء (Bug Fix): تم تعديل دالة ReadPositiveNumber وإضافة return number في نهايتها، وهو أمر جوهري وأساسي لكي ترجع الدالة القيمة المطلوبة للبرنامج الرئيسي وتمنع أي سلوك غير متوقع (Undefined Behavior) كان يحدث بسبب نسيان إرجاع القيمة.
 
+## 🧩 Problem #16: Check Sparse Matrix
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج للتحقق مما إذا كانت المصفوفة المُدخلة هي "مصفوفة متناثرة" (Sparse Matrix). تُعرف المصفوفة المتناثرة في هذا السياق بأنها المصفوفة التي يكون عدد الأصفار (0s) فيها أكبر من أو يساوي عدد الأرقام الأخرى (Non-zero numbers).
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• حساب الحجم الكلي: لمعرفة إجمالي عدد العناصر نضرب عدد الصفوف في الأعمدة (مثلاً 3 × 3 = 9).
+
+• استخدام دالة العد (Reuse): نستخدم دالة CountNumberInMatrix التي بنيناها في المسألة السابقة لعد كم مرة يظهر الرقم 0 في المصفوفة.
+
+• المقارنة: نتحقق هل عدد الأصفار أكبر من أو يساوي نصف إجمالي عناصر المصفوفة TotalSize / 2.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <cmath> // لاستخدام دالة ceil
+#include <iomanip>
+using namespace std;
+
+void PrintMatrix(int matrix[3][3], short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            cout << "\t" << setw(3) << matrix[i][j];
+        }
+        cout << endl;
+    }
+}
+
+short CountNumberInMatrix(int matrix[3][3], int numberToCount, short rows, short cols)
+{
+    short count = 0;
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            if (matrix[i][j] == numberToCount)
+            {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+// Function to check if a matrix is sparse
+bool IsSparseMatrix(int matrix[3][3], short rows, short cols)
+{
+    short matrixSize = rows * cols;
+    // نتأكد هل عدد الأصفار أكبر من أو يساوي نصف حجم المصفوفة
+    // استخدمنا (float) و ceil لضمان تقريب الأرقام الفردية للأعلى (مثال: 9/2 = 4.5 -> 5)
+    return (CountNumberInMatrix(matrix, 0, rows, cols) >= ceil((float)matrixSize / 2));
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #16 : Check Sparse Matrix";
+    cout << "\n-------------------------------------------------\n\n";
+
+    int matrix1[3][3] = { {0, 0, 12}, {9, 9, 1}, {0, 0, 9} };
+
+    cout << "Matrix 1:\n\n";
+    PrintMatrix(matrix1, 3, 3);
+
+    if (IsSparseMatrix(matrix1, 3, 3))
+    {
+        cout << "\nYes: The matrix is Sparse.\n";
+    }
+    else
+    {
+        cout << "\nNo: The matrix is NOT Sparse.\n";
+    }
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    return 0;
+}
+
+```
+
 </div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• القسمة والتقريب للأعلى (Ceil and Float Cast): عندما نقسم رقم فردي مثل 9 على 2 برمجياً، النتيجة تكون 4 (لأن نوع البيانات integer يهمل الكسر). لتصحيح ذلك، قمنا بتحويل المتغير لـ float أولاً (float)matrixSize لتصبح النتيجة 4.5، ثم استخدمنا دالة ceil لتقريبها للأعلى فتصبح 5. هذا يضمن عمل الكود بدقة مع المصفوفات الفردية الأبعاد.
+
+## 🧩 Problem #17: Number Exists In Matrix
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج يفحص هل رقم معين (يدخله المستخدم) موجود داخل المصفوفة أم لا. الهدف هنا ليس معرفة كم مرة تكرر الرقم، بل مجرد التأكد من "وجوده".
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• نمر على كل عنصر في المصفوفة ونقارنه بالرقم المطلوب.
+
+• بمجرد أن نجد الرقم، نقوم بعمل (Early Return) وإرجاع true فوراً لإنهاء الدالة.
+
+• إذا انتهت الحلقات كلها دون العثور على الرقم، نُرجع false.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void PrintMatrix(int matrix[3][3], short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            cout << "\t" << setw(3) << matrix[i][j];
+        }
+        cout << endl;
+    }
+}
+
+// Function to check if a specific number exists in the matrix
+bool IsNumberInMatrix(int matrix[3][3], int number, short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            if (matrix[i][j] == number)
+            {
+                return true; // Early Return
+            }
+        }
+    }
+    return false;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #17 : Check if Number Exists in Matrix";
+    cout << "\n-------------------------------------------------\n\n";
+
+    int matrix1[3][3] = { {77, 5, 12}, {22, 20, 1}, {1, 0, 9} };
+
+    cout << "Matrix 1:\n\n";
+    PrintMatrix(matrix1, 3, 3);
+
+    int number = 20; // Hardcoded for demo, could use ReadPositiveNumber
+    cout << "\nLooking for number: " << number << "\n";
+
+    // الطريقة السريعة
+    if (IsNumberInMatrix(matrix1, number, 3, 3))
+    {
+        cout << "\nYes: The number is there.\n";
+    }
+    else
+    {
+        cout << "\nNo: The number is NOT there.\n";
+    }
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    return 0;
+}
+
+```
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• الخروج المبكر (Early Return): كما نوه الدكتور أبو هدهود، يمكننا استخدام دالة العد CountNumberInMatrix > 0 لحل هذه المسألة، ولكنها أبطأ لأنها تجبر الكومبايلر على فحص كامل المصفوفة. بينما استخدام الخروج المبكر (Early Return) يجعل الدالة تتوقف عن الفحص وتُرجع true بمجرد العثور على الرقم (مثلاً من أول خانة)، مما يجعل الأداء (Time Complexity) $O(1)$ في أفضل الحالات.
+
+## 🧩 Problem #18: Intersected Numbers in Matrices
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج يقارن بين مصفوفتين، ويقوم بطباعة "الأرقام المشتركة" (Intersected Numbers) الموجودة في كلتا المصفوفتين.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• نمر على كل عنصر في المصفوفة الأولى باستخدام for loop.
+
+• نأخذ هذا العنصر ونمرره إلى الدالة IsNumberInMatrix التي صنعناها للتو في المسألة السابقة، ونسألها: "هل هذا العنصر موجود في المصفوفة الثانية؟".
+
+• إذا كان الجواب نعم (true)، نقوم بطباعة الرقم على الشاشة.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void PrintMatrix(int matrix[3][3], short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            cout << "\t" << setw(3) << matrix[i][j];
+        }
+        cout << endl;
+    }
+}
+
+bool IsNumberInMatrix(int matrix[3][3], int number, short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            if (matrix[i][j] == number)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Function to print intersected numbers between two matrices
+void PrintIntersectedNumbers(int matrix1[3][3], int matrix2[3][3], short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            int number = matrix1[i][j];
+            // Check if the current element from Matrix1 exists in Matrix2
+            if (IsNumberInMatrix(matrix2, number, rows, cols))
+            {
+                cout << setw(3) << number << " ";
+            }
+        }
+    }
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #18 : Intersected Numbers in Matrices";
+    cout << "\n-------------------------------------------------\n\n";
+
+    int matrix1[3][3] = { {77, 5, 12}, {22, 20, 1}, {1, 0, 9} };
+    int matrix2[3][3] = { {5, 80, 90}, {22, 77, 1}, {10, 8, 33} };
+
+    cout << "Matrix 1:\n\n";
+    PrintMatrix(matrix1, 3, 3);
+
+    cout << "\nMatrix 2:\n\n";
+    PrintMatrix(matrix2, 3, 3);
+
+    cout << "\nIntersected Numbers are: \n\n";
+    PrintIntersectedNumbers(matrix1, matrix2, 3, 3);
+    cout << "\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    return 0;
+}
+
+```
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• قوة إعادة الاستخدام (Power of Reusability): لاحظ كيف أن الدالة PrintIntersectedNumbers أصبحت قصيرة جداً ومقروءة بشكل واضح لأننا اعتمدنا على دالة IsNumberInMatrix الجاهزة بدلاً من بناء حلقة تكرار ثالثة ورابعة بداخلها للبحث، مما يُقلل من تعقيد الكود (Nesting).
+
+## 🧩 Problem #19: Min and Max Number In Matrix
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج يقوم بالبحث عن "أصغر رقم" (Minimum) و "أكبر رقم" (Maximum) بداخل مصفوفة معينة، ثم يقوم بطباعتهما.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• تهيئة القيمة الابتدائية: أهم تريكة هنا هي ألا تضع القيمة الابتدائية بصفر (0). الأصح برمجياً هو أن تفترض أن أول عنصر في المصفوفة matrix[0][0] هو الأصغر (أو الأكبر) وتخزنه في متغير.
+
+• المرور والتحديث: تمر على المصفوفة وتقارن كل عنصر بالمتغير الذي خزنته. إذا كان العنصر الجديد أصغر، تُحدث قيمة الـ Minimum. وإذا كان أكبر، تُحدث الـ Maximum.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void PrintMatrix(int matrix[3][3], short rows, short cols)
+{
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            cout << "\t" << setw(3) << matrix[i][j];
+        }
+        cout << endl;
+    }
+}
+
+// Function to find the minimum number in the matrix
+int MinNumberInMatrix(int matrix[3][3], short rows, short cols)
+{
+    // Start by assuming the very first element is the smallest
+    int min = matrix[0][0];
+
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            if (matrix[i][j] < min)
+            {
+                min = matrix[i][j]; // Update the minimum
+            }
+        }
+    }
+    return min;
+}
+
+// Function to find the maximum number in the matrix
+int MaxNumberInMatrix(int matrix[3][3], short rows, short cols)
+{
+    // Start by assuming the very first element is the largest
+    int max = matrix[0][0];
+
+    for (short i = 0; i < rows; i++)
+    {
+        for (short j = 0; j < cols; j++)
+        {
+            if (matrix[i][j] > max)
+            {
+                max = matrix[i][j]; // Update the maximum
+            }
+        }
+    }
+    return max;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #19 : Min and Max Number in Matrix";
+    cout << "\n-------------------------------------------------\n\n";
+
+    int matrix1[3][3] = { {77, 5, 12}, {22, 20, 6}, {14, 3, 9} };
+
+    cout << "Matrix 1:\n\n";
+    PrintMatrix(matrix1, 3, 3);
+
+    cout << "\nMinimum Number is: " << MinNumberInMatrix(matrix1, 3, 3) << endl;
+    cout << "Maximum Number is: " << MaxNumberInMatrix(matrix1, 3, 3) << endl;
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    return 0;
+}
+
+```
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• التهيئة الآمنة (Safe Initialization): لو قمنا بتهيئة int min = 0 وكانت المصفوفة تحتوي فقط على أرقام موجبة ضخمة (مثلاً تبدأ من 50)، فإن الدالة كانت سترجع 0 بالخطأ لأنه أصغر من كل الأرقام! لذلك، الاعتماد على العنصر الأول matrix[0][0] يحمي برنامجك تماماً من هذه الأخطاء المنطقية.
+
+## 🧩 Problem #20: Palindrome Matrix
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب التحقق مما إذا كانت المصفوفة "متماثلة" (Palindrome Matrix) أم لا. في هذا السياق، المصفوفة تعتبر Palindrome إذا كان كل صف (Row) بداخلها يُقرأ من اليمين لليسار تماماً كما يُقرأ من اليسار لليمين.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• نحن لا نحتاج لفحص المصفوفة بالكامل، بل يكفي فحص النصف الأول من كل صف ومقارنته بالنصف الثاني المعكوس.
+
+• تمر الحلقة الخارجية i على جميع الصفوف.
+
+• تمر الحلقة الداخلية j على الأعمدة حتى المنتصف فقط Cols / 2.
+
+• نقارن العنصر الأيسر matrix[i][j] بالعنصر الذي يقابله في الجهة اليمنى matrix[i][Cols - 1 - j]. إذا اختلفا، نُرجع false.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void PrintMatrix(int matrix[3][3], short rows, short cols)
+{
+for (short i = 0; i < rows; i++)
+{
+for (short j = 0; j < cols; j++)
+{
+cout << "\t" << setw(3) << matrix[i][j];
+}
+cout << endl;
+}
+}
+
+// Function to check if the matrix is a Palindrome
+bool IsPalindromeMatrix(int matrix[3][3], short rows, short cols)
+{
+for (short i = 0; i < rows; i++)
+{
+// Loop through the columns only up to the middle (Cols / 2)
+for (short j = 0; j < cols / 2; j++)
+{
+// Compare the current element with its mirrored counterpart on the right side
+if (matrix[i][j] != matrix[i][cols - 1 - j])
+{
+return false; // Not a palindrome if any mismatch is found
+}
+}
+}
+return true;
+}
+
+int main()
+{
+cout << "\n-------------------------------------------------\n";
+cout << "Problem #20 : Palindrome Matrix";
+cout << "\n-------------------------------------------------\n\n";
+
+    int matrix1[3][3] = { {1, 2, 1}, {5, 5, 5}, {7, 3, 7} };
+
+    cout << "Matrix 1:\n\n";
+    PrintMatrix(matrix1, 3, 3);
+
+    if (IsPalindromeMatrix(matrix1, 3, 3))
+    {
+        cout << "\nYes: The matrix is a Palindrome.\n";
+    }
+    else
+    {
+        cout << "\nNo: The matrix is NOT a Palindrome.\n";
+    }
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    return 0;
+
+}
+
+```
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• تحسين الأداء (Performance Optimization): لو جعلنا الحلقة الداخلية تستمر حتى النهاية Cols، لكنا نفحص كل زوج مرتين بلا أي داعٍ! إيقاف الفحص عند Cols / 2 يختصر وقت تنفيذ هذه الدالة إلى النصف، وهو ما يصنع فارقاً حاسماً في المصفوفات الضخمة (مثل معالجة الصور التي تحتوي على ملايين البيكسلات).
+
+</div>
+```
