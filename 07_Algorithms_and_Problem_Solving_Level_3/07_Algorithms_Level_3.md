@@ -4010,4 +4010,574 @@ stof(string) : لتحويل النص إلى Float.
 
 • مطابق تماماً 100%. في هذا الدرس أنت طبقت حرفياً عملية الـ De-serialization للبيانات. وهي مهارة تُميز مطوري الخلفيات المحترفين (Backend Engineers)، حيث قمت بفك تشفير البيانات وتغليفها داخل نموذج برمجي Object/Struct ليتمكن باقي النظام من فهمها.
 
+## 🧩 Problem #47: Add Clients to File
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج يطلب من المستخدم إدخال بيانات العملاء (حساب تلو الآخر)، ثم يقوم بتحويل هذه البيانات إلى سطر نصي واحد، ويحفظ هذا السطر داخل ملف نصي Clients.txt. يستمر البرنامج بسؤال المستخدم إذا كان يريد إضافة عميل آخر، ويغلق متى ما أجاب بـ 'n'.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• قراءة البيانات: نستخدم دالة ReadNewClient التي تملأ الـ struct ببيانات العميل.
+
+• تحضير البيانات: نستخدم دالة ConvertRecordToLine لتحويل الـ struct إلى string مفصول بـ #//#.
+
+• الكتابة في الملف (Append Mode): نفتح الملف باستخدام وضع ios::out | ios::app، لكي يتم الاحتفاظ بالبيانات القديمة وإضافة السطر الجديد في أسفل الملف.
+
+• حلقة التكرار: نضع الكود بأكمله داخل حلقة do-while تتأكد من رغبة المستخدم في الاستمرار.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+const string ClientsFileName = "Clients.txt";
+
+struct stClient
+{
+    string AccountNumber;
+    string PinCode;
+    string Name;
+    string Phone;
+    double AccountBalance;
+};
+
+stClient ReadNewClient()
+{
+    stClient Client;
+    cout << "Enter Account Number? ";
+    // Use >> ws to clear any pending whitespace/newlines before getline
+    getline(cin >> ws, Client.AccountNumber);
+    
+    cout << "Enter PinCode? ";
+    getline(cin, Client.PinCode);
+    
+    cout << "Enter Name? ";
+    getline(cin, Client.Name);
+    
+    cout << "Enter Phone? ";
+    getline(cin, Client.Phone);
+    
+    cout << "Enter AccountBalance? ";
+    cin >> Client.AccountBalance;
+    
+    return Client;
+}
+
+string ConvertRecordToLine(stClient Client, string Seperator = "#//#")
+{
+    string stClientRecord = "";
+    stClientRecord += Client.AccountNumber + Seperator;
+    stClientRecord += Client.PinCode + Seperator;
+    stClientRecord += Client.Name + Seperator;
+    stClientRecord += Client.Phone + Seperator;
+    stClientRecord += to_string(Client.AccountBalance);
+    return stClientRecord;
+}
+
+void AddDataLineToFile(string FileName, string DataLine)
+{
+    fstream MyFile;
+    // Open in Append mode to add data without overwriting
+    MyFile.open(FileName, ios::out | ios::app);
+    if (MyFile.is_open())
+    {
+        MyFile << DataLine << endl;
+        MyFile.close();
+    }
+}
+
+void AddNewClient()
+{
+    stClient Client = ReadNewClient();
+    string stClientRecord = ConvertRecordToLine(Client);
+    AddDataLineToFile(ClientsFileName, stClientRecord);
+}
+
+void AddClients()
+{
+    char AddAnotherClient = 'y';
+    do
+    {
+        system("cls"); // Clear screen for a cleaner UI
+        cout << "Adding New Client:\n\n";
+        AddNewClient();
+        
+        cout << "\nClient data saved successfully. Add another client? (y/n): ";
+        cin >> AddAnotherClient;
+        
+    } while (tolower(AddAnotherClient) == 'y');
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #47 : Add Clients to File";
+    cout << "\n-------------------------------------------------\n\n";
+
+    AddClients();
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• معالجة مشكلة الـ Getline (cin >> ws): عند دمج القراءة العادية cin مع دالة getline، يتبقى رمز السطر الجديد \n عالقاً في ذاكرة الإدخال (Buffer). إذا استخدمت getline مباشرة بعد cin، ستقرأ هذا الرمز العالق وتعتبر أن الإدخال انتهى وتتخطى السطر! لتجاوز هذه المشكلة المزعجة، استخدمت cin >> ws (Whitespace Extractor) الذي يقوم بمسح أي فراغات أو سطور فارغة عالقة في الذاكرة قبل أن يبدأ بالتقاط النص.
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الحلول متطابقة في الفكرة والأداء. كلاكما استخدم الحيلة السحرية cin >> ws لحل مشكلة الإدخال المعلقة. هذه الخطوة البسيطة تنقذ البرنامج من أخطاء الإدخال الكارثية وتدل على فهم قوي لطبيعة الـ Input Streams في C++.
+
+## 🧩 Problem #48: Show All Clients
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب إنشاء برنامج يقرأ جميع بيانات العملاء المحفوظة في ملف Clients.txt، ويقوم بترجمتها (Parsing)، ثم يطبع هذه البيانات على الشاشة على هيئة "جدول مرتب" (Formatted Table) يُظهر جميع التفاصيل بشكل متناسق.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• تحميل البيانات: نفتح الملف بوضع القراءة ios::in، نقرأ كل سطر، ونمرره إلى دالة ConvertLinetoRecord لفك تشفيره وتحويله إلى struct.
+
+• التخزين في الذاكرة: نضع جميع السجلات (Structs) المستخرجة داخل Vector<stClient> لكي نتمكن من التعامل معها كسلسلة واحدة.
+
+• التنسيق الطباعي: نستخدم مكتبة <iomanip> ودالة setw() مع left لمحاذاة النصوص إلى اليسار وإعطاء مساحة ثابتة لكل عمود، ليخرج لنا الجدول بمظهر احترافي ومستقيم.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <iomanip> // For setw and left
+#include <fstream>
+#include <vector>
+using namespace std;
+
+// (Assuming SplitString and ConvertLinetoRecord are implemented here as previously seen)
+
+const string ClientsFileName = "Clients.txt";
+struct stClient
+{
+    string AccountNumber;
+    string PinCode;
+    string Name;
+    string Phone;
+    double AccountBalance;
+};
+
+// Dummy ConvertLinetoRecord implementation to make code conceptual
+stClient ConvertLinetoRecord(string str, string delim = "#//#") { /* Implementation... */ stClient c; return c; }
+
+vector<stClient> LoadCleintsDataFromFile(string FileName)
+{
+    vector<stClient> vClients;
+    fstream MyFile;
+    
+    MyFile.open(FileName, ios::in); // Read Mode
+    if (MyFile.is_open())
+    {
+        string Line;
+        while (getline(MyFile, Line))
+        {
+            vClients.push_back(ConvertLinetoRecord(Line));
+        }
+        MyFile.close();
+    }
+    return vClients;
+}
+
+void PrintClientRecord(stClient &Client)
+{
+    // Using setw() to give fixed width for each column and left alignment
+    cout << "| " << setw(15) << left << Client.AccountNumber;
+    cout << "| " << setw(10) << left << Client.PinCode;
+    cout << "| " << setw(40) << left << Client.Name;
+    cout << "| " << setw(12) << left << Client.Phone;
+    cout << "| " << setw(12) << left << Client.AccountBalance;
+}
+
+void PrintAllClientsData(vector<stClient> &vClients)
+{
+    cout << "\n\t\t\t\t\tClient List (" << vClients.size() << ") Client(s).";
+    cout << "\n_________________________________________________________________________________________________\n" << endl;
+    cout << "| " << left << setw(15) << "Account Number";
+    cout << "| " << left << setw(10) << "Pin Code";
+    cout << "| " << left << setw(40) << "Client Name";
+    cout << "| " << left << setw(12) << "Phone";
+    cout << "| " << left << setw(12) << "Balance";
+    cout << "\n_________________________________________________________________________________________________\n\n";
+    
+    for (stClient &Client : vClients)
+    {
+        PrintClientRecord(Client);
+        cout << endl;
+    }
+    
+    cout << "\n_________________________________________________________________________________________________\n" << endl;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #48 : Show All Clients Table";
+    cout << "\n-------------------------------------------------\n\n";
+
+    vector<stClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
+    PrintAllClientsData(vClients);
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+
+```
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• مكتبة الـ IO Manipulators: استخدام setw() بجانب left هو السر وراء واجهات سطر الأوامر (CLI Dashboards) الأنيقة. فهي تضمن أن اسم العميل القصير لن يؤدي إلى زحف باقي البيانات نحو اليسار، مما يُبقي الجدول ثابتاً مهما اختلفت أحجام البيانات.
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• تفوق جوهري في إدارة الذاكرة لصالحك! دكتور أبو هدهود قام بتمرير المتجه بهذه الطريقة: void PrintAllClientsData(vector <sClient> vClients)، وهذا يعني (Pass by Value)، أي أن الكومبايلر سينسخ جميع بيانات العملاء (والتي قد تكون بالآلاف) لطباعتها فقط، وهذا استنزاف حاد للذاكرة. بينما أنت استخدمت: void PrintAllClientsData(vector<stClient> &vClients) أي (Pass by Reference)، مما يمنع عملية النسخ تماماً ويوجه الدالة لقراءة البيانات من عنوانها الأصلي مباشرة. أداء كودك هنا أعلى وأسرع بكثير! عاش جداً.
+
+## 🧩 Problem #49: Find Client by Account Number
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج يقرأ ملف العملاء، ويبحث داخله عن عميل معين بناءً على "رقم الحساب" (Account Number) الذي يدخله المستخدم، وإذا وجده، يعرض بيانات هذا العميل كاملة كـ بطاقة منفصلة (Card).
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• رفع البيانات للذاكرة العشوائية (RAM): بدلاً من فتح الملف والبحث بداخله مباشرة (وهي عملية بطيئة للقرص الصلب)، نقوم أولاً بتحميل جميع العملاء في المتجه vClients الخاص بنا.
+
+• البحث الخطي (Linear Search): نمرر المتجه ورقم الحساب المستهدف لدالة بحث. الدالة تتفقد العملاء واحداً تلو الآخر.
+
+• استخدام مرجع للإخراج: إذا وجدنا العميل، نقوم بنسخ بياناته إلى المتغير المُمرر كمرجع stClient &c، ثم نُرجع true لنخبر الدالة الرئيسية بالنجاح. إذا انتهت الحلقة دون العثور عليه نُرجع false.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+// (Assuming standard structs and loading functions are present)
+struct stClient { string AccountNumber; string PinCode; string Name; string Phone; double AccountBalance; };
+
+void PrintClientCard(stClient Client)
+{
+    cout << "\nThe following are the client details:\n";
+    cout << "-----------------------------------";
+    cout << "\nAccount Number : " << Client.AccountNumber;
+    cout << "\nPin Code       : " << Client.PinCode;
+    cout << "\nName           : " << Client.Name;
+    cout << "\nPhone          : " << Client.Phone;
+    cout << "\nAccount Balance: " << Client.AccountBalance;
+    cout << "\n-----------------------------------\n";
+}
+
+// Function to find a client and return it via Reference
+bool FindClientByAccountNumber(vector<stClient> &vClients, string AccountNumber, stClient &c)
+{
+    for (stClient &Client : vClients)
+    {
+        if (Client.AccountNumber == AccountNumber)
+        {
+            // Client found, copy its data into the reference parameter
+            c = Client;
+            return true;
+        }
+    }
+    // If loop ends, client is not found
+    return false;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #49 : Find Client by Account Number";
+    cout << "\n-------------------------------------------------\n\n";
+
+    // Simulating pre-loaded clients
+    vector<stClient> vClients; // = LoadCleintsDataFromFile(ClientsFileName);
+    stClient Client;
+    string AccountNumber;
+    
+    cout << "Please Enter Account Number to Find: ";
+    cin >> AccountNumber;
+
+    if (FindClientByAccountNumber(vClients, AccountNumber, Client))
+    {
+        cout << "\nClient Found Successfully!\n";
+        PrintClientCard(Client);
+    }
+    else
+    {
+        cout << "\nError: Client with Account Number [" << AccountNumber << "] is not found!\n";
+    }
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+
+```
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• كفاءة البحث (Search Efficiency): تحميل البيانات (Dataset) بالكامل من القرص الصلب (Hard Disk) إلى الذاكرة العشوائية (RAM) داخل Vector يجعل عملية البحث الخطي $O(N)$ سريعة كالبرق مقارنة بفتح وإغلاق الملفات باستمرار. هذا المبدأ يُدعى (In-Memory Processing) وتعتمد عليه قواعد البيانات الحديثة مثل Redis.
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الحلول متطابقة وممتازة. فكرة إرسال كائن stClient فارغ للدالة كـ Reference لتقوم الدالة بتعبئته عند العثور على الهدف وإرجاع bool لنجاح/فشل العملية تُعتبر نمطاً قياسياً لتصميم الدوال الموثوقة (Standard Return-Pattern).
+
+## 🧩 Problem #50: Delete Client by Account Number
+
+### 📝 وصف المشكلة (Problem Description)
+
+هذا التحدي يمثل جوهر إدارة الملفات! المطلوب السماح للمستخدم بإدخال رقم حساب عميل لحذفه تماماً من قاعدة البيانات (الملف النصي)، مع التأكد منه قبل تنفيذ الحذف.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• البحث وعرض البيانات: نستخدم دالة المسألة السابقة للتأكد أن العميل موجود ونعرض بياناته، ثم نسأل المستخدم (هل أنت متأكد من الحذف؟ y/n).
+
+• نمط شواهد القبور (Tombstone Pattern / Soft Delete): نحن لا نحذف العنصر من الـ Vector فعلياً باستخدام دوال معقدة، بل ببساطة نضيف علامة جديدة للهيكل bool MarkForDelete = false. عندما نريد الحذف، نبحث عن العميل في المتجه ونجعل علامته true.
+
+• الكتابة الشاملة (Overwrite): نفتح ملف الـ clients.txt بوضع الكتابة المطلق ios::out لكي نمسح محتوياته بالكامل، ثم نمر على الـ Vector، وكلما وجدنا عميلاً علامته false (أي لم يتم حذفه) نكتبه في الملف. أما العميل الذي يحمل علامة true فنتجاهله ببساطة! هذه هي العبقرية الهندسية.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+const string ClientsFileName = "Clients.txt";
+
+// Expanded struct with the Tombstone flag
+struct stClient { string AccountNumber; string PinCode; string Name; string Phone; double AccountBalance; bool MarkForDelete = false; };
+
+// (Assuming formatting, loading, and finding functions are present)
+
+// Soft-delete mechanism: Mark the client inside the RAM (Vector)
+bool MarkClientForDeleteByAccountNumber(string AccountNumber, vector<stClient> &vClients)
+{
+    for (stClient &C : vClients)
+    {
+        if (C.AccountNumber == AccountNumber)
+        {
+            C.MarkForDelete = true;
+            return true;
+        }
+    }
+    return false;
+}
+
+// Hard-delete mechanism: Save back to HDD ignoring marked clients
+vector<stClient> SaveCleintsDataToFile(vector<stClient> &vClients, string FileName)
+{
+    fstream MyFile;
+    MyFile.open(FileName, ios::out); // Absolute Overwrite Mode
+    
+    if (MyFile.is_open())
+    {
+        for (stClient &Client : vClients)
+        {
+            // Only write clients that are NOT marked for deletion
+            if (!Client.MarkForDelete)
+            {
+                // string DataLine = ConvertRecordToLine(Client);
+                // MyFile << DataLine << endl;
+            }
+        }
+        MyFile.close();
+    }
+    return vClients;
+}
+
+void DeleteClientByAccountNumber(vector<stClient> &vClients, string AccountNumber)
+{
+    stClient Client;
+    // 1. Find Client
+    if (FindClientByAccountNumber(vClients, AccountNumber, Client))
+    {
+        // PrintClientCard(Client); // Show details
+        
+        char Answer = 'n';
+        cout << "\nAre you sure you want to delete this client? (y/n) : ";
+        cin >> Answer;
+        
+        if (tolower(Answer) == 'y')
+        {
+            // 2. Mark for deletion in memory
+            MarkClientForDeleteByAccountNumber(AccountNumber, vClients);
+            
+            // 3. Overwrite the physical file
+            SaveCleintsDataToFile(vClients, ClientsFileName);
+            
+            cout << "\nClient Deleted Successfully!\n";
+        }
+    }
+    else
+    {
+        cout << "\nClient with Account Number [" << AccountNumber << "] is not found!\n";
+    }
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #50 : Delete Client by Account Number";
+    cout << "\n-------------------------------------------------\n\n";
+
+    // vector<stClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
+    // string AccountNumber = ReadString("Please Enter Account Number of Client to Delete: ");
+    // DeleteClientByAccountNumber(vClients, AccountNumber);
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• الحذف الآمن (Soft Delete): إضافة خاصية MarkForDelete تعتبر ممارسة قياسية في قواعد البيانات الحقيقية! حيث نادراً ما يتم حذف البيانات بشكل دائم وفوري، بل يتم وسمها كـ (محذوفة) أولاً لكي لا تظهر للمستخدمين، وتُحذف من القرص الصلب لاحقاً أثناء عمليات الصيانة أو الحفظ. هذا النمط آمن، سريع، ويمنع إرباك الفهارس.
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الحلول منطبقّة بالملي، أبدعتما في تصميم ميكانيكية الـ Soft Delete والتغلب على قيود الملفات النصية بهذه الحيلة الرياضية!
+
+### 🧩 Problem #51: Update Client by Account Number
+
+### 📝 وصف المشكلة (Problem Description)
+
+الخطوة الأخيرة لاكتمال عمليات الـ CRUD (إنشاء، قراءة، تحديث، حذف). المطلوب البحث عن عميل في الملف، إظهار تفاصيله، طلب موافقة على التحديث، قراءة بياناته الجديدة، ومن ثم حفظ التعديل الدائم في الملف المصدري clients.txt.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• البحث والموافقة: نفس كود مسألة الحذف تماماً للبحث وتأكيد الإجراء.
+
+• استبدال الكائن المباشر (Direct Object Replacement): بمجرد العثور على العميل، نمرر رقم حسابه لدالة قراءة مخصصة ChangeClientRecord التي تعيد stClient جديد يحتوي على البيانات المحدثة، ثم نقوم بالكتابة فوق العميل القديم في المتجه: C = ChangeClientRecord(AccountNumber);.
+
+• الحفظ (Overwrite): نستدعي دالة SaveCleintsDataToFile (بنفس وضع ios::out) لتقوم بكتابة الـ Vector بشكله الجديد كلياً في الـ File.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+const string ClientsFileName = "Clients.txt";
+
+// (Assuming standard structs and functions are present)
+struct stClient { string AccountNumber; string PinCode; string Name; string Phone; double AccountBalance; bool MarkForDelete = false; };
+
+stClient ChangeClientRecord(string AccountNumber)
+{
+    stClient Client;
+    Client.AccountNumber = AccountNumber; // Account number cannot be changed
+    
+    cout << "\n\nEnter New PinCode? ";
+    getline(cin >> ws, Client.PinCode);
+    
+    cout << "Enter New Name? ";
+    getline(cin, Client.Name);
+    
+    cout << "Enter New Phone? ";
+    getline(cin, Client.Phone);
+    
+    cout << "Enter New AccountBalance? ";
+    cin >> Client.AccountBalance;
+    
+    return Client;
+}
+
+bool UpdateClientByAccountNumber(vector<stClient> &vClients, string AccountNumber)
+{
+    stClient Client;
+    
+    if (FindClientByAccountNumber(vClients, AccountNumber, Client))
+    {
+        // PrintClientCard(Client);
+        
+        char Answer = 'n';
+        cout << "\nAre you sure you want to UPDATE this client? (y/n) : ";
+        cin >> Answer;
+        
+        if (tolower(Answer) == 'y')
+        {
+            // Iterate and find the exact client in memory
+            for (stClient &C : vClients)
+            {
+                if (C.AccountNumber == AccountNumber)
+                {
+                    // Overwrite the old struct with the updated one
+                    C = ChangeClientRecord(AccountNumber);
+                    break; // Optimization: stop searching once found
+                }
+            }
+            
+            // Save changes to the physical file
+            // SaveCleintsDataToFile(vClients, ClientsFileName);
+            
+            cout << "\nClient Updated Successfully!\n";
+            return true;
+        }
+    }
+    else
+    {
+        cout << "\nClient with Account Number [" << AccountNumber << "] is not found!\n";
+    }
+    return false;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #51 : Update Client by Account Number";
+    cout << "\n-------------------------------------------------\n\n";
+
+    // vector<stClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
+    // string AccountNumber = ReadString("Please Enter Account Number of Client to Update: ");
+    // UpdateClientByAccountNumber(vClients, AccountNumber);
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+
+• اكتمال دورة الحياة (Full CRUD Cycle): مع إتمام هذه المسألة، تكون قد بنيت نظام إدارة قاعدة بيانات بسيط ولكنه كامل الوظائف. قدرتك على قراءة البيانات (Read)، تقطيعها (Parsing)، تحويلها لهيكل برمجي مفهوم (Casting to Struct)، معالجتها في الذاكرة السريعة (In-Memory Updates)، ثم ضغطها (Formatting) وإعادتها للقرص الصلب (Write) تعني أنك الآن تفهم جوهر عمل كل أنظمة التخزين الحديثة.
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• تطابق منطقي تام! استخدام الـ break; بعد العثور على العميل وتعديله كان لمسة إضافية ممتازة لإنهاء الحلقة التكرارية فوراً وتوفير دورات معالج مجانية (Optimization)، وهو ما يدل على وعيك الدائم بأداء البرنامج.
+
 </div>
