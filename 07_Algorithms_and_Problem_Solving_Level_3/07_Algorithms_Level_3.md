@@ -2838,4 +2838,641 @@ int main()
 
 • الحلول متطابقة. تحويل الحرف لـ Lowercase أولاً قبل اختباره يُعتبر من قواعد كتابة الأكواد النظيفة (Clean Code Practices) لأنك وفرت على الكومبايلر وعلى المبرمج عبء قراءة شروط مزدوجة لا حاجة لها.
 
+## 🧩 Problem #33: Count Vowels
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة برنامج يقرأ نصاً (String) من المستخدم، ثم يقوم بعدّ حروف العلة (Vowels) الموجودة في هذا النص وإرجاع المجموع النهائي.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• نقوم بإعادة استخدام (Reuse) دالة IsVowel التي قمنا ببنائها في المسألة السابقة.
+
+• نمر على النص كاملاً باستخدام حلقة تكرار (for loop).
+
+• في كل لفة، نرسل الحرف الحالي إلى دالة IsVowel. إذا رجعت النتيجة true، نقوم بزيادة العداد بمقدار 1.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+string ReadString(string message)
+{
+    string l;
+    cout << message;
+    getline(cin, l);
+    return l;
+}
+
+// Reusing the IsVowel function
+bool IsVowel(char l)
+{
+    char lowerL = tolower(l);
+    return (lowerL == 'a' || lowerL == 'e' || lowerL == 'i' || lowerL == 'o' || lowerL == 'u');
+}
+
+// Function to count total vowels in a string
+short CountVowels(string str)
+{
+    short count = 0;
+    for (size_t i = 0; i < str.length(); i++)
+    {
+        if (IsVowel(str[i]))
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #33 : Count Vowels in a String";
+    cout << "\n-------------------------------------------------\n\n";
+
+    string str = ReadString("Please Enter a String: ");
+    cout << "\nNumber of Vowels in string is: " << CountVowels(str);
+
+    cout << "\n\n-------------------------------------------------\n\n";
+    return 0;
+}
+
+```
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الفكرة البرمجية متطابقة 100%. تطبيقك لمبدأ إعادة الاستخدام (Reusability) من خلال استدعاء دالة IsVowel داخل حلقة التكرار هو دليل على أنك بدأت تفكر كمهندس برمجيات يعتمد على الـ Modular Code.
+
+## 🧩 Problem #34: Print All Vowels In String
+
+### 📝 وصف المشكلة (Problem Description)
+
+بدلاً من عدّ حروف العلة، المطلوب هو استخراج جميع حروف العلة (Vowels) الموجودة في النص المُدخل وطباعتها على الشاشة، مفصولة بمسافات.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• الفكرة مطابقة تماماً للمسألة السابقة.
+
+• بدلاً من زيادة عداد عند التحقق من وجود حرف علة، سنقوم بطباعة الحرف مباشرة داخل الجملة الشرطية if.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+string ReadString(string message)
+{
+    string l;
+    cout << message;
+    getline(cin, l);
+    return l;
+}
+
+bool IsVowel(char l)
+{
+    char lowerL = tolower(l);
+    return (lowerL == 'a' || lowerL == 'e' || lowerL == 'i' || lowerL == 'o' || lowerL == 'u');
+}
+
+// Function to print vowels instead of counting them
+void PrintVowels(string str)
+{
+    for (short i = 0; i < str.length(); i++)
+    {
+        if (IsVowel(str[i]))
+        {
+            cout << str[i] << " ";
+        }
+    }
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #34 : Print All Vowels In String";
+    cout << "\n-------------------------------------------------\n\n";
+
+    string str = ReadString("Please Enter a String: ");
+    
+    cout << "\nVowels in string : ";
+    PrintVowels(str);
+
+    cout << "\n\n-------------------------------------------------\n\n";
+    return 0;
+}
+
+```
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الحلول متطابقة تماماً. الكود نظيف، واستخدام نوع المتغير short في عداد الحلقة for هو ممارسة جيدة لتوفير الذاكرة.
+
+## 🧩 Problem #35: Print Each Word In String
+
+### 📝 وصف المشكلة (Problem Description)
+
+هذه المسألة هي واحدة من أهم مسائل الكورس (String Parsing). المطلوب قراءة جملة كاملة من المستخدم (String)، ثم تقطيع هذه الجملة وطباعة كل كلمة على سطر مستقل.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• المحرف الفاصل (Delimiter): الكلمات تُفصل عادة بمسافة فارغة " ". سنبحث عن هذه المسافة.
+
+• حلقة البحث والقص (find & substr):
+
+نستخدم S1.find(delim) للبحث عن مكان أول مسافة.
+
+نستخدم دالة substr(0, pos) لاقتطاع النص من البداية وحتى مكان المسافة (هذه هي الكلمة الأولى).
+
+نستخدم دالة الـ erase() لقص الكلمة الأولى مع مسافتها من النص الكلي.
+
+نستمر في هذه الحلقة طالما أن دالة البحث لا ترجع string::npos (أي طالما أن هناك مسافات).
+
+• الكلمة الأخيرة: الكلمة الأخيرة في النص لن يكون بعدها مسافة غالباً، لذلك نضيف جملة شرطية في نهاية الدالة لطباعة ما تبقى من النص.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+string ReadString(string message)
+{
+    string word;
+    cout << message;
+    getline(cin, word);
+    return word;
+}
+
+// Function to parse and print each word separated by a space
+void PrintEachWordInString(string S1)
+{
+    string delim = " ";
+    short pos = 0;
+    string sWord;
+
+    cout << "\nYour string words are: \n";
+
+    // Loop continues as long as the delimiter is found
+    while ((pos = S1.find(delim)) != std::string::npos)
+    {
+        sWord = S1.substr(0, pos); // Extract the word
+
+        if (sWord != "") // Ensure we don't print empty strings
+        {
+            cout << "\t" << sWord << endl;
+        }
+
+        // Erase the extracted word and the delimiter to continue searching
+        S1.erase(0, pos + delim.length());
+    }
+
+    // Print the final remaining word (if any)
+    if (S1 != "")
+    {
+        cout << "\t" << S1 << endl;
+    }
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #35 : Print Each Word In String";
+    cout << "\n-------------------------------------------------\n\n";
+
+    string str = ReadString("Please Enter your String : ");
+    PrintEachWordInString(str);
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• تطابق تام! هذه هي الطريقة الكلاسيكية والصلبة (Standard) لتقطيع النصوص في لغة C++. منطق الـ while مع الـ find وتحديث الـ String باستخدام الـ erase يُظهر فهماً عميقاً لكيفية معالجة الـ Strings ديناميكياً.
+
+## 🧩 Problem #36: Count Each Word In String
+
+### 📝 وصف المشكلة (Problem Description)
+
+بدلاً من طباعة الكلمات المقطعة، المطلوب هنا هو عدّ هذه الكلمات (عدد الكلمات الإجمالي في الجملة) وإرجاع العدد للمستخدم.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• اللوجيك المستخدم هنا هو نسخة كربونية من منطق التقطيع (Parsing) في المسألة 35.
+
+• التغيير الوحيد: بدلاً من طباعة الكلمة على الشاشة، سنقوم بإنشاء عداد (Counter)، وكلما وجدنا كلمة واقتطعناها، نزيد العداد بمقدار 1.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+string ReadString(string message)
+{
+    string word;
+    cout << message;
+    getline(cin, word);
+    return word;
+}
+
+// Function to count the words using the parsing method
+short CountWords(string S1)
+{
+    short counter = 0;
+    string delim = " ";
+    short pos = 0;
+    string sWord;
+
+    while ((pos = S1.find(delim)) != std::string::npos)
+    {
+        sWord = S1.substr(0, pos);
+        
+        if (sWord != "")
+        {
+            counter++;
+        }
+        
+        S1.erase(0, pos + delim.length());
+    }
+
+    // Count the last word
+    if (S1 != "")
+    {
+        counter++;
+    }
+
+    return counter;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #36 : Count Each Word In String";
+    cout << "\n-------------------------------------------------\n\n";
+
+    string str = ReadString("Please Enter your String : ");
+    cout << "\nYour string words count : " << CountWords(str);
+
+    cout << "\n\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• اللوجيك لديك ولدى الدكتور متطابق. قدرتك على تحويل دالة تقوم بـ "الطباعة" إلى دالة تقوم بـ "العد" باستخدام نفس المنهجية تدل على تحكمك الممتاز بالخوارزمية.
+
+## 🧩 Problem #37: Split String
+
+### 📝 وصف المشكلة (Problem Description)
+
+هذه المسألة تمثل خطوة مهمة جداً لتأسيس أداة برمجية سنستخدمها كثيراً في المستقبل. المطلوب إنشاء دالة تُسمى SplitString تقوم بتقطيع النص ووضع جميع الكلمات داخل هيكل بيانات (Vector of Strings) لتتمكن من إرجاعه واستخدامه لاحقاً.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• نستخدم نفس أداة التقطيع والمسح (find & erase) للمسافات.
+
+• نُعرّف Vector محلي داخل الدالة من نوع String.
+
+• كلما اقتطعنا كلمة، نقوم بدفعها push_back إلى الـ Vector، ثم في نهاية الدالة نُرجع هذا الـ Vector للـ main.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+string ReadString(string message)
+{
+    string word;
+    cout << message;
+    getline(cin, word);
+    return word;
+}
+
+// Function that returns a Vector containing the parsed words
+vector<string> SplitString(string S1, string delim = " ")
+{
+    vector<string> vWords;
+    short pos = 0;
+    string sWord;
+
+    while ((pos = S1.find(delim)) != std::string::npos)
+    {
+        sWord = S1.substr(0, pos);
+        
+        if (sWord != "")
+        {
+            vWords.push_back(sWord);
+        }
+        
+        S1.erase(0, pos + delim.length());
+    }
+
+    // Push the remaining last word to the vector
+    if (S1 != "")
+    {
+        vWords.push_back(S1);
+    }
+
+    return vWords;
+}
+
+// Utility function to print vector content
+void PrintWords(vector<string> &vWords)
+{
+    cout << "\nYour string words are: \n";
+    for (string &word : vWords)
+    {
+        cout << "\t" << word << endl;
+    }
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #37 : Split String into a Vector";
+    cout << "\n-------------------------------------------------\n\n";
+
+    string str = ReadString("Please Enter your String : ");
+    
+    // Splitting the string and capturing the result in a vector
+    vector<string> vWords = SplitString(str);
+    
+    cout << "\nYour string Tokens : " << vWords.size() << endl;
+    PrintWords(vWords);
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الحلول متطابقة تماماً. بناء دالة للتقطيع (Split) وإرجاع مصفوفة ديناميكية (Vector) هي مهارة أساسية ستحتاجها في قراءة ملفات قواعد البيانات والمستندات (مثل استخراج البيانات من ملفات CSV حيث تكون العناصر مفصولة بفاصلة ,).
+
+## 🧩 Problem #38: Trim Left, Trim Right, Trim
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب كتابة دالة تقوم بإزالة المسافات الفارغة الزائدة (Spaces) من بداية النص (Trim Left)، ومن نهاية النص (Trim Right)، ودالة ثالثة تقوم بإزالتها من الاتجاهين معاً (Trim All).
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• Trim Left: نمر على الكلمة من اليسار لليمين (من الفهرس 0). بمجرد أن نجد أول حرف "ليس مسافة"، نقوم باقتطاع النص من هذا الفهرس وحتى النهاية.
+
+• Trim Right: نمر على الكلمة بالمعكوس (من اليمين لليسار، مبتدئين من length - 1). بمجرد أن نجد أول حرف "ليس مسافة"، نقتطع النص من البداية 0 وحتى هذا الحرف.
+
+• Trim All: نقوم بتمرير النص لعملية TrimLeft، ونمرر النتيجة إلى TrimRight مباشرة (أو العكس).
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+string ReadString(string message)
+{
+    string l;
+    cout << message;
+    getline(cin, l);
+    return l;
+}
+
+// Remove leading spaces
+string TrimLeft(string str)
+{
+    for (size_t i = 0; i < str.length(); i++)
+    {
+        if (str[i] != ' ')
+        {
+            // Omit the second argument in substr to automatically take the rest of the string
+            return str.substr(i); 
+        }
+    }
+    return str; // If the string is all spaces, return it as is or handle accordingly
+}
+
+// Remove trailing spaces
+string TrimRight(string str)
+{
+    for (int i = str.length() - 1; i >= 0; i--)
+    {
+        if (str[i] != ' ')
+        {
+            return str.substr(0, i + 1); // +1 because length is index + 1
+        }
+    }
+    return str;
+}
+
+// Remove both leading and trailing spaces
+string TrimAll(string str)
+{
+    return TrimLeft(TrimRight(str));
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #38 : Trim Left, Trim Right, Trim All";
+    cout << "\n-------------------------------------------------\n\n";
+
+    // Simulating user input with spaces manually to show the effect
+    string str = "      Hello World      ";
+    
+    cout << "Original String : [" << str << "]\n";
+    cout << "Trim Left       : [" << TrimLeft(str) << "]\n";
+    cout << "Trim Right      : [" << TrimRight(str) << "]\n";
+    cout << "Trim All        : [" << TrimAll(str) << "]\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• تألق ملحوظ في حلك! الدكتور استخدم الكود التالي في TrimLeft: return S1.substr(i, S1.length() - i);. ولكن حلك أنت return str.substr(i); هو الأفضل والأنظف (Cleaner Code)، لأن الدالة substr إذا لم تُعطها المعامل الثاني (الطول المطلوب)، فإنها تلقائياً تأخذ كل شيء حتى نهاية النص. أحسنت!
+
+## 🧩 Problem #39: Join String
+
+### 📝 وصف المشكلة (Problem Description)
+
+هذه المسألة هي العملية العكسية لمسألة التقطيع (Split). المطلوب كتابة دالة JoinString تأخذ (Vector of Strings) وتقوم بدمج كافة عناصره لتكوين نص واحد متصل (String)، بحيث يتم الفصل بين الكلمات بـ Delimiter معين يتم تمريره (مثل المسافة، الفاصلة، أو الشَرطة).
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• نُعرف متغيراً من نوع string sResult لتخزين النتيجة النهائية.
+
+• نمر على كل كلمة في الـ Vector، ونقوم بلصق الكلمة + المحرف الفاصل delim داخل النتيجة.
+
+• بعد نهاية الحلقة، سيكون هناك محرف فاصل "زائد" متصل بآخر كلمة. نستخدم دالة .erase (أو .substr) لحذفه من النتيجة النهائية.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+// Function to join a vector of strings into a single string
+string JoinString(vector<string> &vWords, string delim = " ")
+{
+    string sResult;
+    for (string &word : vWords)
+    {
+        sResult += word + delim;
+    }
+    
+    // Remove the trailing delimiter
+    if (sResult.length() > 0)
+    {
+        sResult.erase(sResult.length() - delim.length());
+    }
+    
+    return sResult;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #39 : Join String (From Vector)";
+    cout << "\n-------------------------------------------------\n\n";
+
+    vector<string> vWords = {"Fars", "Alaa", "Mostafa"};
+    
+    cout << "Vector Items: Fars, Alaa, Mostafa\n";
+    cout << "Joined with space : " << JoinString(vWords) << "\n";
+    cout << "Joined with comma : " << JoinString(vWords, ", ") << "\n";
+    cout << "Joined with dash  : " << JoinString(vWords, "-") << "\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+```
+
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• الحلول منطقياً متطابقة وتعطي نفس النتيجة. في إزالة الفاصل الأخير الزائد، استخدم الدكتور دالة .substr للحصول على الجملة بدون الجزء الأخير، بينما استخدمت أنت الدالة التدميرية (Destructive Function) .erase لمسح الجزء الزائد في نفس المتغير. كلا الطريقتين صحيحتان ومقبولتان جداً في لغة C++.
+
+## 🧩 Problem #40: Join String (Overloading)
+
+### 📝 وصف المشكلة (Problem Description)
+
+المطلوب توسيع إمكانيات دالة الدمج JoinString التي برمجناها في المسألة السابقة لكي تدعم (المصفوفات العادية - Standard Arrays) إلى جانب دعمها للمتجهات (Vectors).
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+
+• سنستخدم تقنية (التحميل الزائد للدوال - Function Overloading).
+
+• نُعرّف دالة جديدة بنفس الاسم JoinString، ولكن هذه المرة البارامترات الخاصة بها مختلفة: ستستقبل مصفوفة string arr[] وتستقبل المتغير الخاص بطولها short length.
+
+• نكتب حلقة تكرار مشابهة تقوم بدمج العناصر وإزالة المحرف الأخير.
+
+### 💻 الكود المعتمد (Solution)
+
+<div dir="ltr">
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+// 1. JoinString function for Vectors
+string JoinString(vector<string> &vWords, string delim = " ")
+{
+    string sResult;
+    for (string &word : vWords)
+    {
+        sResult += word + delim;
+    }
+    if (sResult.length() > 0)
+    {
+        sResult.erase(sResult.length() - delim.length());
+    }
+    return sResult;
+}
+
+// 2. Overloaded JoinString function for Standard Arrays
+string JoinString(string words[], short length, string delim = " ")
+{
+    string sResult;
+    for (short i = 0; i < length; i++)
+    {
+        sResult += words[i] + delim;
+    }
+    if (sResult.length() > 0)
+    {
+        sResult.erase(sResult.length() - delim.length());
+    }
+    return sResult;
+}
+
+int main()
+{
+    cout << "\n-------------------------------------------------\n";
+    cout << "Problem #40 : Join String (Overloading with Array)";
+    cout << "\n-------------------------------------------------\n\n";
+
+    // Using Vector
+    vector<string> vWords = {"Fars", "Alaa", "Mostafa"};
+    cout << "Vector Joined   : " << JoinString(vWords, " ") << "\n";
+
+    // Using Standard Array
+    string arrWords[5] = {"Fars", "Alaa", "Mostafa", "Ahmed", "Ali"};
+    cout << "Array Joined    : " << JoinString(arrWords, 5, " - ") << "\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    return 0;
+}
+
+```
+</div>
+
+### ⚖️ مقارنة حلي بحل الدكتور (Solution Comparison)
+
+• تطابق تام (Perfect Match) في فهم واستخدام الـ Overloading. لغة C++ تكتشف نوع البيانات المرسل في الـ main وبناءً عليه تقرر استدعاء الدالة المناسبة (سواء النسخة الخاصة بالـ Vector أو النسخة الخاصة بالـ Array) بسلاسة.
+
 </div>
