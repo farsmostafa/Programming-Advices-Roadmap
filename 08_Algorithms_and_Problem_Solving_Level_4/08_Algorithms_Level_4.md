@@ -878,4 +878,276 @@ int main()
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
 حل قوي جدًا ويعتبر لبنة أساسية لمسائل التحويل بين التاريخ واليوم الترتيبي داخل السنة.
 
+## 🧩 Problem #11: Date From Day Order In Year
+### 📝 وصف المشكلة (Problem Description)
+تحويل التاريخ إلى رقم اليوم داخل السنة، ثم عكس العملية مرة أخرى (من رقم اليوم إلى تاريخ فعلي).
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+الفكرة تعتمد على دالتين متكاملتين:
+1. `NumberOfDaysFromTheBeginingOfTheYear` لحساب الترتيب السنوي.
+2. `GetDateFromDayOrderInYear` لفك هذا الترتيب وإعادة بناء اليوم/الشهر/السنة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+// Source: #11_DateFromDayOrderInYear.cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+    int number;
+    cout << message;
+    cin >> number;
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+bool IsLeapYear(int year) { return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0); }
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12) return 0;
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++) totalDays += NumberOfDaysInMonth(m, year);
+    totalDays += day;
+    return totalDays;
+}
+struct sDate { short day; short month; short year; };
+sDate GetDateFromDayOrderInYear(short dayOrder, short year)
+{
+    sDate date; date.year = year; date.month = 1;
+    if (dayOrder < 1) { date.day = 0; return date; }
+    while (dayOrder > NumberOfDaysInMonth(date.month, year))
+    {
+        dayOrder -= NumberOfDaysInMonth(date.month, year);
+        date.month++;
+    }
+    date.day = dayOrder;
+    return date;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+ربط الاتجاهين (Forward/Reverse) ممتاز جدًا، لكنه محتاج اتساق أعلى في التعامل مع `dayOrder` إذا تجاوزت نفس السنة.
+
+## 🧩 Problem #12: Add Days To Date
+### 📝 وصف المشكلة (Problem Description)
+إضافة عدد أيام كبير إلى تاريخ معيّن وإرجاع التاريخ النهائي.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نحوّل التاريخ إلى رقم يوم داخل السنة + الأيام المضافة، ثم نتجاوز السنوات واحدة تلو الأخرى حتى نصل للسنة الصحيحة.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+// Source: #12_AddDaysToDate.cpp
+// Uses DateAddDays + GetDateFromDayOrderInYear
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+المنهج صحيح ومرن جدًا. ملاحظة صغيرة: `daysToAdd` نوعه `short` وقد يقيّد المدخلات الكبيرة.
+
+## 🧩 Problem #13: Date1 Less Than Date2
+### 📝 وصف المشكلة (Problem Description)
+التحقق هل التاريخ الأول أقدم من التاريخ الثاني.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+مقارنة هرمية: سنة ثم شهر ثم يوم.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+bool IsDate1BeforeDate2(sDate date1, sDate date2){
+    return (date1.year < date2.year) || 
+           (date1.year == date2.year && date1.month < date2.month) || 
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+منطقي جدًا ومباشر. يوجد تنسيق غريب بسيط في تعريف `main` داخل الملف يحتاج ترتيب.
+
+## 🧩 Problem #14: Date1 Equals Date2
+### 📝 وصف المشكلة (Problem Description)
+التحقق من التطابق الكامل بين تاريخين.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+المساواة تكون فقط إذا (سنة + شهر + يوم) متطابقين بالكامل.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+دالة صغيرة وصحيحة، وتكمل بشكل ممتاز دوال المقارنة الأخرى.
+
+## 🧩 Problem #15: Last Day / Last Month
+### 📝 وصف المشكلة (Problem Description)
+فحص إذا كان التاريخ هو آخر يوم في شهره، وهل الشهر نفسه هو آخر شهر في السنة.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+دالتان Boolean منفصلتان:
+1. مقارنة اليوم مع `NumberOfDaysInMonth`.
+2. التحقق أن الشهر يساوي 12.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+تقسيم واضح وقابل لإعادة الاستخدام مباشرة في مسائل الزيادة/النقصان.
+
+## 🧩 Problem #16: Increase Date By One Day
+### 📝 وصف المشكلة (Problem Description)
+تحديث التاريخ بيوم واحد بشكل صحيح عند نهاية الشهر أو نهاية السنة.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+إذا كان اليوم الأخير من الشهر:
+- إن كان ديسمبر: ننتقل لسنة جديدة.
+- غير ذلك: ننتقل للشهر التالي.
+وإلا نزيد اليوم فقط.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+هذه الدالة هي قلب أغلب مسائل التاريخ اللاحقة، والimplementation الحالي ممتاز.
+
+## 🧩 Problem #17: Difference In Days
+### 📝 وصف المشكلة (Problem Description)
+حساب عدد الأيام بين تاريخين.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نمشي يومًا بيوم من الأصغر للأكبر باستخدام `IncreaseDateByOneDay` مع عداد.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bool swapFlagValue = false)
+{
+    if (IsDate1BeforeDate2(date2, date1))
+    {
+        return GetDifferenceInDays(date2, date1, IncludeEndDay, true);
+    }
+    int counter = 0;
+    while (IsDate1BeforeDate2(date1, date2))
+    {
+        date1 = IncreaseDateByOneDay(date1);
+        counter++;
+    }
+    counter += IncludeEndDay ? 1 : 0;
+    return swapFlagValue ? -counter : counter;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+صحيح جدًا وبسيط الفهم، لكنه خطي زمنيًا (O(days)) عند الفروق الكبيرة.
+
+## 🧩 Problem #18: Your Age In Days
+### 📝 وصف المشكلة (Problem Description)
+حساب عمر المستخدم بالأيام بالاعتماد على تاريخ الميلاد وتاريخ النظام الحالي.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+قراءة تاريخ الميلاد + جلب تاريخ النظام (`tm`) ثم إعادة استخدام دالة الفروق.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+sDate GetSystemDate()
+{
+    time_t t = time(0);
+    tm *now = localtime(&t);
+    sDate date;
+    date.year = now->tm_year + 1900;
+    date.month = now->tm_mon + 1; 
+    date.day = now->tm_mday;
+    return date;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل ممتاز عمليًا، وتوابع `tm` مستخدمة بطريقة صحيحة.
+
+## 🧩 Problem #19: Difference In Negative Days
+### 📝 وصف المشكلة (Problem Description)
+دعم إخراج فرق الأيام بالقيمة السالبة عندما يكون تاريخ البداية بعد تاريخ النهاية.
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نفس دالة المسألة #17 بالفعل تدعم هذا عبر `swapFlagValue` وإرجاع `-counter`.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+return swapFlagValue ? -counter : counter;
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل ذكي جدًا لأنه يحافظ على دالة واحدة موحدة بدل نسختين منفصلتين للحالة الموجبة والسالبة.
+
+## 🧩 Problem #20: Increase Date By X Days (Start Of Series)
+### 📝 وصف المشكلة (Problem Description)
+بداية سلسلة مسائل #20 إلى #32 الخاصة بزيادة التاريخ بأشكال متعددة (أيام، أسابيع، شهور، سنوات...).
+### 💡 الفكرة البرمجية (Logic Breakdown)
+في Problem #20 تحديدًا: زيادة التاريخ بعدد X من الأيام عبر تكرار دالة `IncreaseDateByOneDay`.
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+```cpp
+sDate IncreaseDateByXDays(sDate date, int days)
+{
+    for (int i = 0; i < days; i++)
+    {
+        date = IncreaseDateByOneDay(date);
+    }
+    return date;
+}
+```
+</div>
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+قاعدة ممتازة لباقي دوال السلسلة. الملف الأصلي `#20_To_32` يضم مجموعة كاملة ومترابطة من دوال الزيادة.
+
 </div>
