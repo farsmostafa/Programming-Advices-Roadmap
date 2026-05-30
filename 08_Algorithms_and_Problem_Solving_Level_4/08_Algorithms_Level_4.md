@@ -877,21 +877,17 @@ int main()
 
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
 حل قوي جدًا ويعتبر لبنة أساسية لمسائل التحويل بين التاريخ واليوم الترتيبي داخل السنة.
-
 ## 🧩 Problem #11: Date From Day Order In Year
 ### 📝 وصف المشكلة (Problem Description)
-تحويل التاريخ إلى رقم اليوم داخل السنة، ثم عكس العملية مرة أخرى (من رقم اليوم إلى تاريخ فعلي).
+المطلوب تحويل التاريخ إلى رقم اليوم داخل السنة، ثم استخدام هذا الرقم لإعادة بناء التاريخ مرة أخرى. هذه المسألة تربط بين تمثيلين مهمين للتاريخ: التاريخ العادي، والترتيب السنوي.
 
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-الفكرة تعتمد على دالتين متكاملتين:
-1. `NumberOfDaysFromTheBeginingOfTheYear` لحساب الترتيب السنوي.
-2. `GetDateFromDayOrderInYear` لفك هذا الترتيب وإعادة بناء اليوم/الشهر/السنة.
+نحسب أولًا عدد الأيام من بداية السنة حتى التاريخ المدخل. بعد ذلك نبدأ من شهر يناير ونطرح أيام كل شهر من dayOrder حتى نصل للشهر واليوم الصحيحين.
 
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
-// Source: #11_DateFromDayOrderInYear.cpp
+`cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -900,9 +896,11 @@ using namespace std;
 
 int ReadPositiveNumberInRange(string message, int From, int To)
 {
+
     int number;
     cout << message;
     cin >> number;
+
     while (cin.fail() || number < From || number > To)
     {
         cin.clear();
@@ -912,25 +910,60 @@ int ReadPositiveNumberInRange(string message, int From, int To)
     }
     return number;
 }
-bool IsLeapYear(int year) { return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0); }
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
 short NumberOfDaysInMonth(int month, int year)
 {
-    if (month < 1 || month > 12) return 0;
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
     int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
 }
+
 short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
 {
     short totalDays = 0;
-    for (int m = 1; m < month; m++) totalDays += NumberOfDaysInMonth(m, year);
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
     totalDays += day;
     return totalDays;
 }
-struct sDate { short day; short month; short year; };
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
 sDate GetDateFromDayOrderInYear(short dayOrder, short year)
 {
-    sDate date; date.year = year; date.month = 1;
-    if (dayOrder < 1) { date.day = 0; return date; }
+    sDate date;
+    date.year = year;
+    date.month = 1;
+    if (dayOrder < 1)
+    {
+        date.day = 0;
+        cout << "Invalid day order! Day order should be greater than 0.\n";
+        return date;
+    }else if (dayOrder > (IsLeapYear(year) ? 366 : 365))
+    {
+        short yearsToAdd = 0;
+        while (dayOrder > (IsLeapYear(year + yearsToAdd) ? 366 : 365))
+        {
+            dayOrder -= (IsLeapYear(year + yearsToAdd) ? 366 : 365);
+            yearsToAdd++;
+        }
+        date.year += yearsToAdd;
+        cout << "Day order exceeds the number of days in the year " << year << ". It corresponds to a date in the year " << date.year << ".\n";
+    }
     while (dayOrder > NumberOfDaysInMonth(date.month, year))
     {
         dayOrder -= NumberOfDaysInMonth(date.month, year);
@@ -939,75 +972,474 @@ sDate GetDateFromDayOrderInYear(short dayOrder, short year)
     date.day = dayOrder;
     return date;
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-ربط الاتجاهين (Forward/Reverse) ممتاز جدًا، لكنه محتاج اتساق أعلى في التعامل مع `dayOrder` إذا تجاوزت نفس السنة.
 
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #11 :Write a program to print total days from the beginning of year, then Take the total days and convert them back to date.\n";
+    cout << "\tex     : Please enter a year   ? 2022\n";
+    cout << "\t         Please enter a month  ? 9\n";
+    cout << "\t         Please enter a day    ? 20\n";
+    cout << "\toutput : Number of days from beginning of the year is 263\n\n";
+    cout << "\t         Date for [263] is: 20/9/2022";
+    cout << "\n\n-------------------------------------------------\n";
+    short year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    short month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    short day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(month, year));
+    cout << "\nNumber of days from beginning of the year is " << NumberOfDaysFromTheBeginingOfTheYear(day, month, year) << "\n";
+    sDate date = GetDateFromDayOrderInYear(NumberOfDaysFromTheBeginingOfTheYear(day, month, year), year);
+    cout << "Date for [" << NumberOfDaysFromTheBeginingOfTheYear(day, month, year) << "] is: "
+         << date.day << "/" << date.month << "/" << date.year << "\n";
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+المسألة ممتازة لأنها تثبت أن التاريخ يمكن تمثيله بأكثر من شكل. يوجد ملاحظة صغيرة في الدالة عند تجاوز dayOrder لسنة معينة: داخل while يتم استخدام year الأصلي في NumberOfDaysInMonth بدل date.year بعد التعديل.
 ## 🧩 Problem #12: Add Days To Date
 ### 📝 وصف المشكلة (Problem Description)
-إضافة عدد أيام كبير إلى تاريخ معيّن وإرجاع التاريخ النهائي.
+المطلوب قراءة تاريخ وعدد أيام، ثم حساب التاريخ الجديد بعد إضافة هذه الأيام. التحدي هنا أن عدد الأيام قد يعبر شهورًا وسنينًا كثيرة.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-نحوّل التاريخ إلى رقم يوم داخل السنة + الأيام المضافة، ثم نتجاوز السنوات واحدة تلو الأخرى حتى نصل للسنة الصحيحة.
+نحول التاريخ الحالي إلى ترتيب يوم داخل السنة، ثم نضيف الأيام المطلوبة. إذا تجاوز المجموع عدد أيام السنة، نطرح سنة كاملة ونزيد year حتى نصل للسنة النهائية.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
-// Source: #12_AddDaysToDate.cpp
-// Uses DateAddDays + GetDateFromDayOrderInYear
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-المنهج صحيح ومرن جدًا. ملاحظة صغيرة: `daysToAdd` نوعه `short` وقد يقيّد المدخلات الكبيرة.
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
 
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate GetDateFromDayOrderInYear(short dayOrder, short year)
+{
+    sDate date;
+    date.year = year;
+    date.month = 1;
+    if (dayOrder < 1)
+    {
+        date.day = 0;
+        cout << "Invalid day order! Day order should be greater than 0.\n";
+        return date;
+    }
+    else if (dayOrder > (IsLeapYear(year) ? 366 : 365))
+    {
+        short yearsToAdd = 0;
+        while (dayOrder > (IsLeapYear(year + yearsToAdd) ? 366 : 365))
+        {
+            dayOrder -= (IsLeapYear(year + yearsToAdd) ? 366 : 365);
+            yearsToAdd++;
+        }
+        date.year += yearsToAdd;
+        cout << "Day order exceeds the number of days in the year " << year << ". It corresponds to a date in the year " << date.year << ".\n";
+    }
+    while (dayOrder > NumberOfDaysInMonth(date.month, year))
+    {
+        dayOrder -= NumberOfDaysInMonth(date.month, year);
+        date.month++;
+    }
+    date.day = dayOrder;
+    return date;
+}
+
+sDate DateAddDays(sDate date, short daysToAdd)
+{
+    short totalDays = NumberOfDaysFromTheBeginingOfTheYear(date.day, date.month, date.year) + daysToAdd;
+    date.month = 1;
+    while (true)
+    {
+        short daysInCurrentYear = IsLeapYear(date.year) ? 366 : 365;
+        if (totalDays <= daysInCurrentYear)
+        {
+            break;
+        }
+        totalDays -= daysInCurrentYear;
+        date.year++;
+    }
+    sDate newDate = GetDateFromDayOrderInYear(totalDays, date.year);
+    return newDate;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #12 :Write a program to read date and read how many days to add to it, print the results on screen.\n";
+    cout << "\tex     : Please enter a year   ? 2022\n";
+    cout << "\t         Please enter a month  ? 10\n";
+    cout << "\t         Please enter a day    ? 10\n";
+    cout << "\t         how many days to add  ? 2500\n";
+    cout << "\toutput : Date for [263] is: 14/8/2029";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date;
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    short daysToAdd = ReadPositiveNumberInRange("how many days to add? : ", 1, 9999);
+    sDate newDate = DateAddDays(date, daysToAdd);
+    cout << "Date for [" << daysToAdd << "] is: " << newDate.day << "/" << newDate.month << "/" << newDate.year;
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل قوي ومناسب للأرقام الكبيرة. ملاحظة: daysToAdd معرف كـ short في main، وهذا قد يحد القيم الكبيرة رغم أن الدالة نفسها تستقبل int في أجزاء أخرى.
 ## 🧩 Problem #13: Date1 Less Than Date2
 ### 📝 وصف المشكلة (Problem Description)
-التحقق هل التاريخ الأول أقدم من التاريخ الثاني.
+المطلوب مقارنة تاريخين ومعرفة هل التاريخ الأول يأتي قبل التاريخ الثاني.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-مقارنة هرمية: سنة ثم شهر ثم يوم.
+نقارن السنة أولًا، ثم الشهر إذا كانت السنة متساوية، ثم اليوم إذا كان الشهر أيضًا متساويًا. هذا هو الترتيب الطبيعي للمقارنة الزمنية.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
 bool IsDate1BeforeDate2(sDate date1, sDate date2){
     return (date1.year < date2.year) || 
            (date1.year == date2.year && date1.month < date2.month) || 
            (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-منطقي جدًا ومباشر. يوجد تنسيق غريب بسيط في تعريف `main` داخل الملف يحتاج ترتيب.
 
+    int
+    main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #13 :Write a program to read date1, date2 and check if Date 1 is Less than Date 2\n";
+    cout << "\tex     : Please enter a year 1  ? 2022\n";
+    cout << "\t         Please enter a month 1 ? 10\n";
+    cout << "\t         Please enter a day 1   ? 10\n";
+    cout << "\t       : Please enter a year 2  ? 2022\n";
+    cout << "\t         Please enter a month 2 ? 4\n";
+    cout << "\t         Please enter a day 2   ? 10\n";
+    cout << "\toutput : No, Date 1 is not less than Date 2";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = ReadDate("Enter Date 2:");
+    if (IsDate1BeforeDate2(date1, date2))
+    {
+        cout << "Yes, Date 1 is less than Date 2";
+    }
+    else
+    {
+        cout << "No, Date 1 is not less than Date 2";
+    }
+    
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+منطق المقارنة صحيح وواضح. يوجد فقط تنسيق غريب حول تعريف main في الملف ويستحق تنظيف لاحقًا.
 ## 🧩 Problem #14: Date1 Equals Date2
 ### 📝 وصف المشكلة (Problem Description)
-التحقق من التطابق الكامل بين تاريخين.
+المطلوب التحقق من أن تاريخين متطابقان بالكامل.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-المساواة تكون فقط إذا (سنة + شهر + يوم) متطابقين بالكامل.
+التاريخان يكونان متساويين فقط إذا كانت السنة والشهر واليوم كلها متساوية.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
 bool IsDate1EqualsDate2(sDate date1, sDate date2)
 {
     return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-دالة صغيرة وصحيحة، وتكمل بشكل ممتاز دوال المقارنة الأخرى.
 
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #14 :Write a program to read date1, date2 and check if Date 1 Equals Date 2\n";
+    cout << "\tex     : Please enter a year 1  ? 2022\n";
+    cout << "\t         Please enter a month 1 ? 10\n";
+    cout << "\t         Please enter a day 1   ? 10\n";
+    cout << "\t       : Please enter a year 2  ? 2022\n";
+    cout << "\t         Please enter a month 2 ? 4\n";
+    cout << "\t         Please enter a day 2   ? 10\n";
+    cout << "\toutput : No, Date 1 is not equal Date 2";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = ReadDate("Enter Date 2:");
+    if (IsDate1EqualsDate2(date1, date2))
+    {
+        cout << "Yes, Date 1 is equal Date 2";
+    }
+    else
+    {
+        cout << "No, Date 1 is not equal Date 2";
+    }
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+دالة صغيرة لكنها مهمة جدًا لأنها تكمل دوال Before وAfter لاحقًا وتمنع تكرار شروط المساواة.
 ## 🧩 Problem #15: Last Day / Last Month
 ### 📝 وصف المشكلة (Problem Description)
-فحص إذا كان التاريخ هو آخر يوم في شهره، وهل الشهر نفسه هو آخر شهر في السنة.
+المطلوب فحص خاصيتين في التاريخ: هل اليوم هو آخر يوم في الشهر؟ وهل الشهر هو آخر شهر في السنة؟
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-دالتان Boolean منفصلتان:
-1. مقارنة اليوم مع `NumberOfDaysInMonth`.
-2. التحقق أن الشهر يساوي 12.
+نستخدم NumberOfDaysInMonth لمعرفة آخر يوم فعلي في الشهر، ونقارن الشهر بالقيمة 12 لمعرفة هل هو ديسمبر.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
 bool IsLastDayInMonth(sDate Date)
 {
     return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
@@ -1016,23 +1448,112 @@ bool IsLastMonthInYear(sDate Date)
 {
     return Date.month == 12;
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-تقسيم واضح وقابل لإعادة الاستخدام مباشرة في مسائل الزيادة/النقصان.
 
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #15 : Write a program to read date and check \n   - If it is last bay in Month\n   - If it is last Month In Year \n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 10\n";
+    cout << "\toutput : No, it is not last day in month\n";
+    cout << "\t         Yes, it is last month in year\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    if (IsLastDayInMonth(date1))
+        cout << "Yes, it is last day in month\n";
+    else
+        cout << "No, it is not last day in month\n";
+
+    if (IsLastMonthInYear(date1))
+        cout << "Yes, it is last month in year\n";
+    else
+        cout << "No, it is not last month in year\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+هذه الدوال تصبح أساسًا مهمًا في IncreaseDateByOneDay لأن الانتقال بين الشهور والسنين يعتمد عليها.
 ## 🧩 Problem #16: Increase Date By One Day
 ### 📝 وصف المشكلة (Problem Description)
-تحديث التاريخ بيوم واحد بشكل صحيح عند نهاية الشهر أو نهاية السنة.
+المطلوب زيادة التاريخ يومًا واحدًا فقط، لكن مع التعامل الصحيح مع نهاية الشهر ونهاية السنة.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-إذا كان اليوم الأخير من الشهر:
-- إن كان ديسمبر: ننتقل لسنة جديدة.
-- غير ذلك: ننتقل للشهر التالي.
-وإلا نزيد اليوم فقط.
+إذا لم يكن اليوم آخر يوم في الشهر نزيد day فقط. إذا كان آخر يوم، ننتقل للشهر التالي أو للسنة التالية إذا كان الشهر ديسمبر.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
 sDate IncreaseDateByOneDay(sDate date)
 {
     if (IsLastDayInMonth(date))
@@ -1055,20 +1576,138 @@ sDate IncreaseDateByOneDay(sDate date)
     }
     return date;
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-هذه الدالة هي قلب أغلب مسائل التاريخ اللاحقة، والimplementation الحالي ممتاز.
 
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #16 : Write a program to read a date and make a function to increase date by one day.\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 10\n";
+    cout << "\toutput : Date after adding one day is: 11/12/2022\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = IncreaseDateByOneDay(date1);
+    cout << "Date after adding one day is: " << date2.day << "/" << date2.month << "/" << date2.year;
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+هذه واحدة من أهم دوال الكورس لأنها Primitive يعتمد عليها حساب الفروق وزيادة الأيام والأسابيع لاحقًا.
 ## 🧩 Problem #17: Difference In Days
 ### 📝 وصف المشكلة (Problem Description)
-حساب عدد الأيام بين تاريخين.
+المطلوب حساب الفرق بالأيام بين تاريخين، مع خيار تضمين يوم النهاية.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-نمشي يومًا بيوم من الأصغر للأكبر باستخدام `IncreaseDateByOneDay` مع عداد.
+نمشي من التاريخ الأصغر إلى الأكبر يومًا بيوم باستخدام IncreaseDateByOneDay ونزيد العداد. IncludeEndDay تضيف يومًا إضافيًا عند الحاجة.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
 int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bool swapFlagValue = false)
 {
     if (IsDate1BeforeDate2(date2, date1))
@@ -1084,20 +1723,162 @@ int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bo
     counter += IncludeEndDay ? 1 : 0;
     return swapFlagValue ? -counter : counter;
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-صحيح جدًا وبسيط الفهم، لكنه خطي زمنيًا (O(days)) عند الفروق الكبيرة.
 
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #17 : Write a program to read a Date1, Date2 and make a function to calculate the difference in days.\n   - Note: Date 1 should be less than Date2\n";
+    cout << "\tex     : Please enter a year 1  ? 2022\n";
+    cout << "\t         Please enter a month 1 ? 12\n";
+    cout << "\t         Please enter a day 1   ? 10\n";
+    cout << "\t       : Please enter a year 2  ? 2022\n";
+    cout << "\t         Please enter a month 2 ? 12\n";
+    cout << "\t         Please enter a day 2   ? 20\n";
+    cout << "\toutput : The difference in days between 10/12/2022 and 20/12/2022 is 10 days.\n";
+    cout << "\t       : the difference (including the end date) is 11 days.\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = ReadDate("Enter Date 2:");
+    int difference = GetDifferenceInDays(date1, date2);
+    cout << "The difference in days between " << date1.day << "/" << date1.month << "/" << date1.year
+         << " and " << date2.day << "/" << date2.month << "/" << date2.year
+         << " is " << difference << " days.\n";
+    cout << "the difference (including the end date) is " << GetDifferenceInDays(date1, date2, true)<< " days.\n";
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+الحل واضح جدًا ويغطي الحالة السالبة عبر swapFlagValue. الأداء خطي بعدد الأيام، وهذا مقبول تعليميًا لكنه قد يكون مكلفًا للفترات الطويلة جدًا.
 ## 🧩 Problem #18: Your Age In Days
 ### 📝 وصف المشكلة (Problem Description)
-حساب عمر المستخدم بالأيام بالاعتماد على تاريخ الميلاد وتاريخ النظام الحالي.
+المطلوب حساب عمر المستخدم بالأيام اعتمادًا على تاريخ ميلاده وتاريخ الجهاز الحالي.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-قراءة تاريخ الميلاد + جلب تاريخ النظام (`tm`) ثم إعادة استخدام دالة الفروق.
+نقرأ تاريخ الميلاد، ثم نحصل على تاريخ النظام عبر time و localtime، وبعدها نستخدم دالة فرق الأيام لحساب العمر.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bool swapFlagValue = false)
+{
+    if (IsDate1BeforeDate2(date2, date1))
+    {
+        return GetDifferenceInDays(date2, date1, IncludeEndDay, true);
+    }
+    int counter = 0;
+    while (IsDate1BeforeDate2(date1, date2))
+    {
+        date1 = IncreaseDateByOneDay(date1);
+        counter++;
+    }
+    counter += IncludeEndDay ? 1 : 0;
+    return swapFlagValue ? -counter : counter;
+}
+
 sDate GetSystemDate()
 {
     time_t t = time(0);
@@ -1108,35 +1889,284 @@ sDate GetSystemDate()
     date.day = now->tm_mday;
     return date;
 }
-```
-</div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-حل ممتاز عمليًا، وتوابع `tm` مستخدمة بطريقة صحيحة.
 
+
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #18 : Write a program calculate you age in days.\n";
+    cout << "\tex     : Please enter a year 1  ? 2003\n";
+    cout << "\t         Please enter a month 1 ? 4\n";
+    cout << "\t         Please enter a day 1   ? 1\n";
+    cout << "\toutput : Your age in days is 8035 days.\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter your birth date:");
+    sDate date2 = GetSystemDate();
+    int difference = GetDifferenceInDays(date1, date2, true);
+    cout << "\nYour age in days is " << difference << " days.\n";
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل عملي وممتاز لأنه يربط Date Utilities ببيانات حقيقية من نظام التشغيل.
 ## 🧩 Problem #19: Difference In Negative Days
 ### 📝 وصف المشكلة (Problem Description)
-دعم إخراج فرق الأيام بالقيمة السالبة عندما يكون تاريخ البداية بعد تاريخ النهاية.
+امتداد لمسألة فرق الأيام بحيث يمكن إرجاع فرق سالب إذا كان التاريخ الأول بعد التاريخ الثاني.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-نفس دالة المسألة #17 بالفعل تدعم هذا عبر `swapFlagValue` وإرجاع `-counter`.
+الدالة تفحص إذا كان date2 قبل date1، فتبدل الترتيب وتفعّل swapFlagValue، ثم تعيد النتيجة بالسالب.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
-return swapFlagValue ? -counter : counter;
-```
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bool swapFlagValue = false)
+{
+    if (IsDate1BeforeDate2(date2, date1))
+    {
+        return GetDifferenceInDays(date2, date1, IncludeEndDay, true);
+    }
+    int counter = 0;
+    while (IsDate1BeforeDate2(date1, date2))
+    {
+        date1 = IncreaseDateByOneDay(date1);
+        counter++;
+    }
+    counter += IncludeEndDay ? 1 : 0;
+    return swapFlagValue ? -counter : counter;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #17 : Write a program to read a Date1, Date2 and make a function to calculate the difference in days.\n   - Note: Date 1 should be less than Date2\n";
+    cout << "\tex     : Please enter a year 1  ? 2022\n";
+    cout << "\t         Please enter a month 1 ? 12\n";
+    cout << "\t         Please enter a day 1   ? 10\n";
+    cout << "\t       : Please enter a year 2  ? 2022\n";
+    cout << "\t         Please enter a month 2 ? 12\n";
+    cout << "\t         Please enter a day 2   ? 20\n";
+    cout << "\toutput : The difference in days between 10/12/2022 and 20/12/2022 is 10 days.\n";
+    cout << "\t       : the difference (including the end date) is 11 days.\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = ReadDate("Enter Date 2:");
+    int difference = GetDifferenceInDays(date1, date2);
+    cout << "The difference in days between " << date1.day << "/" << date1.month << "/" << date1.year
+         << " and " << date2.day << "/" << date2.month << "/" << date2.year
+         << " is " << difference << " days.\n";
+    cout << "the difference (including the end date) is " << GetDifferenceInDays(date1, date2, true)<< " days.\n";
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
 </div>
-### 🛠️ ملاحظات هندسية (Engineering Notes)
-حل ذكي جدًا لأنه يحافظ على دالة واحدة موحدة بدل نسختين منفصلتين للحالة الموجبة والسالبة.
 
-## 🧩 Problem #20: Increase Date By X Days (Start Of Series)
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+تصميم ذكي لأنه يحافظ على دالة واحدة بدل تكرار منطقين منفصلين للفروق الموجبة والسالبة.
+## 🧩 Problem #20: Increase Date By X Days
 ### 📝 وصف المشكلة (Problem Description)
-بداية سلسلة مسائل #20 إلى #32 الخاصة بزيادة التاريخ بأشكال متعددة (أيام، أسابيع، شهور، سنوات...).
+بداية سلسلة زيادة التاريخ. المطلوب زيادة تاريخ بعدد أيام معين، مع احترام كل حدود الشهور والسنين.
+
 ### 💡 الفكرة البرمجية (Logic Breakdown)
-في Problem #20 تحديدًا: زيادة التاريخ بعدد X من الأيام عبر تكرار دالة `IncreaseDateByOneDay`.
+نكرر IncreaseDateByOneDay بعدد الأيام المطلوب، وبذلك نحصل على سلوك صحيح حتى عند عبور نهاية الشهر أو نهاية السنة.
+
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-```cpp
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
 sDate IncreaseDateByXDays(sDate date, int days)
 {
     for (int i = 0; i < days; i++)
@@ -1145,10 +2175,186 @@ sDate IncreaseDateByXDays(sDate date, int days)
     }
     return date;
 }
-```
+
+sDate IncreaseDateByOneWeek(sDate date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        date = IncreaseDateByOneDay(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXWeeks(sDate date, int weeks)
+{
+    for (int i = 0; i < weeks; i++)
+    {
+        date = IncreaseDateByOneWeek(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneMonth(sDate date)
+{
+    if (IsLastMonthInYear(date))
+    {
+        date.year++;
+        date.month = 1;
+    }
+    else
+    {
+        date.month++;
+    }
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByXMonths(sDate date, int months)
+{
+    for (int i = 0; i < months; i++)
+    {
+        date = IncreaseDateByOneMonth(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneYear(sDate date)
+{
+    date.year++;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByXYears(sDate date, int years)
+{
+    for (int i = 0; i < years; i++)
+    {
+        date = IncreaseDateByOneYear(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXYearsFaster(sDate date, int years)
+{
+    date.year += years;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneDecade(sDate date)
+{
+    return IncreaseDateByXYearsFaster(date, 10);
+}
+
+sDate IncreaseDateByXDecades(sDate date, int decades)
+{
+    for (int i = 0; i < decades; i++)
+    {
+        date = IncreaseDateByOneDecade(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXDecadesFaster(sDate date, int decades)
+{
+    date.year += decades * 10;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneCentury(sDate date)
+{
+    date.year += 100;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneMillennium(sDate date)
+{
+    date.year += 1000;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #20 To #32 : Write a program to read a date and make a functions to increase date as follows:\n";
+    cout << "   - IncreaseDateByXDays\n";
+    cout << "   - IncreasebateByOneWeek\n";
+    cout << "   - IncreaseDateByXWeeks\n";
+    cout << "   - IncreaseDateByOneMonth\n";
+    cout << "   - IncreaseDateByXMonths\n";
+    cout << "   - IncreaseDateByOneYear\n";
+    cout << "   - IncreaseDateByXYears\n";
+    cout << "   - IncreaseDateByXYearsFaster\n";
+    cout << "   - IncreaseDateByOneDecade\n";
+    cout << "   - IncreaseDateByXDecades\n";
+    cout << "   - IncreasebateByXDecadesFaster\n";
+    cout << "   - IncreaseDateByOneCentury\n";
+    cout << "   - IncreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Adding One Day : 01/1/2023\n";
+    cout << "\t         02-Adding 10 Days : 11/1/2023\n";
+    cout << "\t         03-Adding One Week : 18/1/2023\n";
+    cout << "\t         04-Adding 10 Weeks: 29/3/2023\n";
+    cout << "\t         05-Adding One Month: 29/4/2023\n";
+    cout << "\t         06-Adding 5 Months: 29/9/2023\n";
+    cout << "\t         07-Adding One Year : 29/9/2024\n";
+    cout << "\t         08-Adding 10 Years: 29/9/2034\n";
+    cout << "\t         09-Adding 10 Years Faster: 29/9/2044\n";
+    cout << "\t         10-Adding One Decade: 29/9/2054\n";
+    cout << "\t         11-Adding 10 Decades: 29/9/2154\n";
+    cout << "\t         12-Adding 10 Decades Faster: 29/9/2254\n";
+    cout << "\t         13-Adding One Century: 29/9/2354\n";
+    cout << "\t         14-Adding One Millennium: 29/9/3354\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = IncreaseDateByOneDay(date1);
+    cout << "    01-Adding One Day : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDays(date2, 10);
+    cout << "    02-Adding 10 Days : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneWeek(date2);
+    cout << "    03-Adding One Week : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXWeeks(date2, 10);
+    cout << "    04-Adding 10 Weeks: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneMonth(date2);
+    cout << "    05-Adding One Month: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXMonths(date2, 5);
+    cout << "    06-Adding 5 Months: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneYear(date2);
+    cout << "    07-Adding One Year : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXYears(date2, 10);
+    cout << "    08-Adding 10 Years: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXYearsFaster(date2, 10);
+    cout << "    09-Adding 10 Years Faster: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneDecade(date2);
+    cout << "    10-Adding One Decade: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDecades(date2, 10);
+    cout << "    11-Adding 10 Decades: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDecadesFaster(date2, 10);
+    cout << "    12-Adding 10 Decades Faster: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneCentury(date2);
+    cout << "    13-Adding One Century: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneMillennium(date2);
+    cout << "    14-Adding One Millennium: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
 </div>
+
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
-قاعدة ممتازة لباقي دوال السلسلة. الملف الأصلي `#20_To_32` يضم مجموعة كاملة ومترابطة من دوال الزيادة.
+الطريقة واضحة جدًا وتؤسس لسلسلة #21 إلى #32. الملف الكامل يحتوي باقي دوال الزيادة المركبة أيضًا.
+
 ## 🧩 Problem #21: Increase Date By One Week
 ### 📝 وصف المشكلة (Problem Description)
 المطلوب زيادة تاريخ كامل بمقدار أسبوع واحد. أهمية المسألة أنها لا تتعامل مع رقم اليوم فقط، بل يجب أن تحافظ على صحة التاريخ عند المرور من نهاية شهر إلى بداية شهر جديد أو من نهاية سنة إلى بداية سنة جديدة.
@@ -11853,4 +13059,5 @@ int main()
 فكرة ممتازة وقابلة للتوسيع، لكن اسم FormateDate فيه typo بسيط والأفضل لاحقًا FormatDate.
 
 </div>
+
 
