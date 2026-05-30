@@ -2088,7 +2088,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2356,7 +2356,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -2383,7 +2383,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2656,7 +2656,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -2685,7 +2685,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2855,7 +2855,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -4488,7 +4488,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -4579,12 +4579,13 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
-هذه المجموعة مهمة جدًا لأنها تنقلنا من الحسابات الرقمية للتاريخ إلى التعامل مع إدخال المستخدم الحقيقي. وجود StringToDate وDateToString معًا يجعل عندنا Conversion Layer واضحة. توجد ملاحظة هندسية صغيرة: SplitString لا ترجع قيمة في حالة كانت السلسلة النهائية فارغة، والأفضل لاحقًا ضمان eturn vString في نهاية الدالة دائمًا.
+هذه المجموعة مهمة جدًا لأنها تنقلنا من الحسابات الرقمية للتاريخ إلى التعامل مع إدخال المستخدم الحقيقي. وجود StringToDate وDateToString معًا يجعل عندنا Conversion Layer واضحة. توجد ملاحظة هندسية صغيرة: SplitString لا ترجع قيمة في حالة كانت السلسلة النهائية فارغة، والأفضل لاحقًا ضمان 
+eturn vString في نهاية الدالة دائمًا.
 
 ## 🧩 Problem #65: Format Date
 ### 📝 وصف المشكلة (Problem Description)
