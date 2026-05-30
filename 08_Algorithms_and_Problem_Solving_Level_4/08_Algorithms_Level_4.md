@@ -3990,5 +3990,2886 @@ int main()
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
 هذه النسخة هي الأفضل أداءً عند القيم الكبيرة، وتوضح الفرق بين الحل التكراري والحل المباشر.
 
+## 🧩 Problem #31: Increase Date By One Century
+### 📝 وصف المشكلة (Problem Description)
+المطلوب زيادة التاريخ بمقدار قرن كامل، أي 100 سنة، مع الحفاظ على صحة اليوم داخل الشهر.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+الدالة تضيف 100 مباشرة إلى السنة، ثم تستخدم NumberOfDaysInMonth مع min لتجنب تاريخ غير صالح مثل 29 فبراير في سنة غير كبيسة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+sDate IncreaseDateByXDays(sDate date, int days)
+{
+    for (int i = 0; i < days; i++)
+    {
+        date = IncreaseDateByOneDay(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneWeek(sDate date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        date = IncreaseDateByOneDay(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXWeeks(sDate date, int weeks)
+{
+    for (int i = 0; i < weeks; i++)
+    {
+        date = IncreaseDateByOneWeek(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneMonth(sDate date)
+{
+    if (IsLastMonthInYear(date))
+    {
+        date.year++;
+        date.month = 1;
+    }
+    else
+    {
+        date.month++;
+    }
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByXMonths(sDate date, int months)
+{
+    for (int i = 0; i < months; i++)
+    {
+        date = IncreaseDateByOneMonth(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneYear(sDate date)
+{
+    date.year++;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByXYears(sDate date, int years)
+{
+    for (int i = 0; i < years; i++)
+    {
+        date = IncreaseDateByOneYear(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXYearsFaster(sDate date, int years)
+{
+    date.year += years;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneDecade(sDate date)
+{
+    return IncreaseDateByXYearsFaster(date, 10);
+}
+
+sDate IncreaseDateByXDecades(sDate date, int decades)
+{
+    for (int i = 0; i < decades; i++)
+    {
+        date = IncreaseDateByOneDecade(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXDecadesFaster(sDate date, int decades)
+{
+    date.year += decades * 10;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneCentury(sDate date)
+{
+    date.year += 100;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneMillennium(sDate date)
+{
+    date.year += 1000;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #20 To #32 : Write a program to read a date and make a functions to increase date as follows:\n";
+    cout << "   - IncreaseDateByXDays\n";
+    cout << "   - IncreasebateByOneWeek\n";
+    cout << "   - IncreaseDateByXWeeks\n";
+    cout << "   - IncreaseDateByOneMonth\n";
+    cout << "   - IncreaseDateByXMonths\n";
+    cout << "   - IncreaseDateByOneYear\n";
+    cout << "   - IncreaseDateByXYears\n";
+    cout << "   - IncreaseDateByXYearsFaster\n";
+    cout << "   - IncreaseDateByOneDecade\n";
+    cout << "   - IncreaseDateByXDecades\n";
+    cout << "   - IncreasebateByXDecadesFaster\n";
+    cout << "   - IncreaseDateByOneCentury\n";
+    cout << "   - IncreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Adding One Day : 01/1/2023\n";
+    cout << "\t         02-Adding 10 Days : 11/1/2023\n";
+    cout << "\t         03-Adding One Week : 18/1/2023\n";
+    cout << "\t         04-Adding 10 Weeks: 29/3/2023\n";
+    cout << "\t         05-Adding One Month: 29/4/2023\n";
+    cout << "\t         06-Adding 5 Months: 29/9/2023\n";
+    cout << "\t         07-Adding One Year : 29/9/2024\n";
+    cout << "\t         08-Adding 10 Years: 29/9/2034\n";
+    cout << "\t         09-Adding 10 Years Faster: 29/9/2044\n";
+    cout << "\t         10-Adding One Decade: 29/9/2054\n";
+    cout << "\t         11-Adding 10 Decades: 29/9/2154\n";
+    cout << "\t         12-Adding 10 Decades Faster: 29/9/2254\n";
+    cout << "\t         13-Adding One Century: 29/9/2354\n";
+    cout << "\t         14-Adding One Millennium: 29/9/3354\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = IncreaseDateByOneDay(date1);
+    cout << "    01-Adding One Day : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDays(date2, 10);
+    cout << "    02-Adding 10 Days : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneWeek(date2);
+    cout << "    03-Adding One Week : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXWeeks(date2, 10);
+    cout << "    04-Adding 10 Weeks: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneMonth(date2);
+    cout << "    05-Adding One Month: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXMonths(date2, 5);
+    cout << "    06-Adding 5 Months: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneYear(date2);
+    cout << "    07-Adding One Year : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXYears(date2, 10);
+    cout << "    08-Adding 10 Years: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXYearsFaster(date2, 10);
+    cout << "    09-Adding 10 Years Faster: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneDecade(date2);
+    cout << "    10-Adding One Decade: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDecades(date2, 10);
+    cout << "    11-Adding 10 Decades: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDecadesFaster(date2, 10);
+    cout << "    12-Adding 10 Decades Faster: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneCentury(date2);
+    cout << "    13-Adding One Century: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneMillennium(date2);
+    cout << "    14-Adding One Millennium: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+هذه نسخة مباشرة عالية الأداء، وتوضح أن الزيادات الكبيرة لا تحتاج Loop إذا كان التغيير في السنة فقط.
+## 🧩 Problem #32: Increase Date By One Millennium
+### 📝 وصف المشكلة (Problem Description)
+المطلوب زيادة التاريخ بمقدار ألف سنة. المسألة تختبر نفس فكرة القرون لكن على مدى أكبر.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نزيد year بمقدار 1000 ثم نصحح day بنفس أسلوب مسائل السنوات والعقود، لأن صلاحية اليوم تعتمد على الشهر والسنة الجديدة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+sDate IncreaseDateByXDays(sDate date, int days)
+{
+    for (int i = 0; i < days; i++)
+    {
+        date = IncreaseDateByOneDay(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneWeek(sDate date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        date = IncreaseDateByOneDay(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXWeeks(sDate date, int weeks)
+{
+    for (int i = 0; i < weeks; i++)
+    {
+        date = IncreaseDateByOneWeek(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneMonth(sDate date)
+{
+    if (IsLastMonthInYear(date))
+    {
+        date.year++;
+        date.month = 1;
+    }
+    else
+    {
+        date.month++;
+    }
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByXMonths(sDate date, int months)
+{
+    for (int i = 0; i < months; i++)
+    {
+        date = IncreaseDateByOneMonth(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByOneYear(sDate date)
+{
+    date.year++;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByXYears(sDate date, int years)
+{
+    for (int i = 0; i < years; i++)
+    {
+        date = IncreaseDateByOneYear(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXYearsFaster(sDate date, int years)
+{
+    date.year += years;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneDecade(sDate date)
+{
+    return IncreaseDateByXYearsFaster(date, 10);
+}
+
+sDate IncreaseDateByXDecades(sDate date, int decades)
+{
+    for (int i = 0; i < decades; i++)
+    {
+        date = IncreaseDateByOneDecade(date);
+    }
+    return date;
+}
+
+sDate IncreaseDateByXDecadesFaster(sDate date, int decades)
+{
+    date.year += decades * 10;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneCentury(sDate date)
+{
+    date.year += 100;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate IncreaseDateByOneMillennium(sDate date)
+{
+    date.year += 1000;
+    date.day = min(date.day, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #20 To #32 : Write a program to read a date and make a functions to increase date as follows:\n";
+    cout << "   - IncreaseDateByXDays\n";
+    cout << "   - IncreasebateByOneWeek\n";
+    cout << "   - IncreaseDateByXWeeks\n";
+    cout << "   - IncreaseDateByOneMonth\n";
+    cout << "   - IncreaseDateByXMonths\n";
+    cout << "   - IncreaseDateByOneYear\n";
+    cout << "   - IncreaseDateByXYears\n";
+    cout << "   - IncreaseDateByXYearsFaster\n";
+    cout << "   - IncreaseDateByOneDecade\n";
+    cout << "   - IncreaseDateByXDecades\n";
+    cout << "   - IncreasebateByXDecadesFaster\n";
+    cout << "   - IncreaseDateByOneCentury\n";
+    cout << "   - IncreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Adding One Day : 01/1/2023\n";
+    cout << "\t         02-Adding 10 Days : 11/1/2023\n";
+    cout << "\t         03-Adding One Week : 18/1/2023\n";
+    cout << "\t         04-Adding 10 Weeks: 29/3/2023\n";
+    cout << "\t         05-Adding One Month: 29/4/2023\n";
+    cout << "\t         06-Adding 5 Months: 29/9/2023\n";
+    cout << "\t         07-Adding One Year : 29/9/2024\n";
+    cout << "\t         08-Adding 10 Years: 29/9/2034\n";
+    cout << "\t         09-Adding 10 Years Faster: 29/9/2044\n";
+    cout << "\t         10-Adding One Decade: 29/9/2054\n";
+    cout << "\t         11-Adding 10 Decades: 29/9/2154\n";
+    cout << "\t         12-Adding 10 Decades Faster: 29/9/2254\n";
+    cout << "\t         13-Adding One Century: 29/9/2354\n";
+    cout << "\t         14-Adding One Millennium: 29/9/3354\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = IncreaseDateByOneDay(date1);
+    cout << "    01-Adding One Day : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDays(date2, 10);
+    cout << "    02-Adding 10 Days : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneWeek(date2);
+    cout << "    03-Adding One Week : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXWeeks(date2, 10);
+    cout << "    04-Adding 10 Weeks: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneMonth(date2);
+    cout << "    05-Adding One Month: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXMonths(date2, 5);
+    cout << "    06-Adding 5 Months: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneYear(date2);
+    cout << "    07-Adding One Year : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXYears(date2, 10);
+    cout << "    08-Adding 10 Years: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXYearsFaster(date2, 10);
+    cout << "    09-Adding 10 Years Faster: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneDecade(date2);
+    cout << "    10-Adding One Decade: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDecades(date2, 10);
+    cout << "    11-Adding 10 Decades: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByXDecadesFaster(date2, 10);
+    cout << "    12-Adding 10 Decades Faster: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneCentury(date2);
+    cout << "    13-Adding One Century: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = IncreaseDateByOneMillennium(date2);
+    cout << "    14-Adding One Millennium: " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+المنطق ممتاز ويؤكد أن نفس قاعدة تصحيح اليوم يمكن استخدامها مع أي قفزة زمنية كبيرة.
+## 🧩 Problem #33: Decrease Date By One Day
+### 📝 وصف المشكلة (Problem Description)
+بداية سلسلة إنقاص التاريخ. المطلوب طرح يوم واحد من التاريخ مع التعامل الصحيح مع بداية الشهر وبداية السنة.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+إذا كان اليوم أكبر من 1 نقلله مباشرة. إذا كان اليوم 1، نرجع للشهر السابق، ولو كنا في يناير نرجع إلى ديسمبر من السنة السابقة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+هذه الدالة هي الأساس لكل دوال الإنقاص التالية، لذلك صحة Boundary Cases فيها مهمة جدًا.
+## 🧩 Problem #34: Decrease Date By X Days
+### 📝 وصف المشكلة (Problem Description)
+طرح عدد أيام يحدده المستخدم من تاريخ معين.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نكرر DecreaseDateByOneDay بعدد الأيام المطلوب، فتنتقل كل حالة عبر نفس منطق اليوم الواحد.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل واضح وسهل المراجعة، لكنه خطي الأداء حسب عدد الأيام.
+## 🧩 Problem #35: Decrease Date By One Week
+### 📝 وصف المشكلة (Problem Description)
+طرح أسبوع واحد من التاريخ، أي سبعة أيام.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نكرر طرح يوم واحد سبع مرات حتى نحافظ على نفس منطق الانتقال بين الشهور والسنين.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+إعادة استخدام ممتازة للدالة الأساسية بدل كتابة حسابات جديدة.
+## 🧩 Problem #36: Decrease Date By X Weeks
+### 📝 وصف المشكلة (Problem Description)
+طرح عدد أسابيع من تاريخ معين.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نحول الأسابيع إلى أيام ضمنيًا عبر Loop بعدد Weeks * 7، وكل مرة نطرح يومًا واحدًا.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+واضح ومنطقي، ومناسب جدًا للتعلم رغم أنه قد يكون أبطأ في القيم الكبيرة.
+## 🧩 Problem #37: Decrease Date By One Month
+### 📝 وصف المشكلة (Problem Description)
+طرح شهر واحد مع مراعاة اختلاف أطوال الشهور.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+إذا كان الشهر يناير نرجع إلى ديسمبر وننقص السنة، وإلا ننقص الشهر فقط. بعدها نصحح اليوم باستخدام min.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+تصحيح اليوم ضروري لحالات مثل 31 مارس عند الرجوع إلى فبراير.
+## 🧩 Problem #38: Decrease Date By X Months
+### 📝 وصف المشكلة (Problem Description)
+طرح عدد شهور من التاريخ.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نكرر DecreaseDateByOneMonth بعدد الشهور المطلوب حتى نحافظ على قواعد التصحيح نفسها.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل تكراري واضح ومتين، ومناسب عندما نريد تتبع الحركة شهرًا بشهر.
+## 🧩 Problem #39: Decrease Date By One Year
+### 📝 وصف المشكلة (Problem Description)
+طرح سنة واحدة من التاريخ مع الحفاظ على يوم صالح.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نقلل السنة بمقدار 1، ثم نضبط اليوم حسب عدد أيام الشهر في السنة الجديدة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+يعالج بدقة حالة 29 فبراير عند الرجوع إلى سنة غير كبيسة.
+## 🧩 Problem #40: Decrease Date By X Years
+### 📝 وصف المشكلة (Problem Description)
+طرح عدد سنوات من التاريخ بالطريقة التكرارية.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نكرر DecreaseDateByOneYear بعدد السنوات المطلوبة، وكل تكرار يصحح اليوم إن احتاج.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate DecreaseDateByOneDay(sDate Date)
+{
+    if (Date.day == 1)
+    {
+        if (Date.month == 1)
+        {
+            Date.month = 12;
+            Date.day = 31;
+            Date.year--;
+        }
+        else
+        {
+            Date.month--;
+            Date.day = NumberOfDaysInMonth(Date.month, Date.year);
+        }
+    }
+    else
+    {
+        Date.day--;
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDays(sDate Date, int Days)
+{
+    for (int i = 0; i < Days; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneWeek(sDate Date)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXWeeks(sDate Date, int Weeks)
+{
+    for (int i = 0; i < Weeks * 7; i++)
+    {
+        Date = DecreaseDateByOneDay(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneMonth(sDate Date)
+{
+    if (Date.month == 1)
+    {
+        Date.month = 12;
+        Date.year--;
+    }
+    else
+    {
+        Date.month--;
+    }
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXMonths(sDate Date, int Months)
+{
+    for (int i = 0; i < Months; i++)
+    {
+        Date = DecreaseDateByOneMonth(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByOneYear(sDate Date)
+{
+    Date.year--;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXYears(sDate Date, int Years)
+{
+    for (int i = 0; i < Years; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXYearsFaster(sDate Date, int Years)
+{
+    Date.year -= Years;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneDecade(sDate Date)
+{
+    Date.year -= 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByXDecades(sDate Date, int Decades)
+{
+    for (int i = 0; i < Decades * 10; i++)
+    {
+        Date = DecreaseDateByOneYear(Date);
+    }
+    return Date;
+}
+
+sDate DecreaseDateByXDecadesFaster(sDate Date, int Decades)
+{
+    Date.year -= Decades * 10;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneCentury(sDate Date)
+{
+    Date.year -= 100;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+sDate DecreaseDateByOneMillennium(sDate Date)
+{
+    Date.year -= 1000;
+    Date.day = min(Date.day, NumberOfDaysInMonth(Date.month, Date.year));
+    return Date;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #33 To #46 : Write a program to read a date and make a functions to decrease date as follows:\n";
+    cout << "   - DecreaseDateByOneDays\n";
+    cout << "   - DecreaseDateByXDays\n";
+    cout << "   - DecreasebateByOneWeek\n";
+    cout << "   - DecreaseDateByXWeeks\n";
+    cout << "   - DecreaseDateByOneMonth\n";
+    cout << "   - DecreaseDateByXMonths\n";
+    cout << "   - DecreaseDateByOneYear\n";
+    cout << "   - DecreaseDateByXYears\n";
+    cout << "   - DecreaseDateByXYearsFaster\n";
+    cout << "   - DecreaseDateByOneDecade\n";
+    cout << "   - DecreaseDateByXDecades\n";
+    cout << "   - DecreasebateByXDecadesFaster\n";
+    cout << "   - DecreaseDateByOneCentury\n";
+    cout << "   - DecreaseDateByOneMillennium\n";
+    cout << "\tex     : Please enter a year  ? 2022\n";
+    cout << "\t         Please enter a month ? 12\n";
+    cout << "\t         Please enter a day   ? 31\n";
+    cout << "\toutput : Date After :\n";
+    cout << "\t         01-Subtracting One Day           : 30/12/2022\n";
+    cout << "\t         02-Subtracting 10 Days           : 20/12/2022\n";
+    cout << "\t         03-Subtracting One Week          : 13/12/2022\n";
+    cout << "\t         04-Subtracting 10 Weeks          : 4/10/2022\n";
+    cout << "\t         05-Subtracting One Month         : 4/9/2022\n";
+    cout << "\t         06-Subtracting 5 Months          : 4/4/2022\n";
+    cout << "\t         07-Subtracting One Year          : 4/4/2021\n";
+    cout << "\t         08-Subtracting 10 Years          : 4/4/2011\n";
+    cout << "\t         09-Subtracting 10 Years Faster   : 4/4/2001\n";
+    cout << "\t         10-Subtracting One Decade        : 4/4/1991\n";
+    cout << "\t         11-Subtracting 10 Decades        : 4/4/1891\n";
+    cout << "\t         12-Subtracting 10 Decades Faster : 4/4/1791\n";
+    cout << "\t         13-Subtracting One Century       : 4/4/1691\n";
+    cout << "\t         14-Subtracting One Millennium    : 4/4/691\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date :");
+
+    cout << "Date After :\n";
+    sDate date2 = DecreaseDateByOneDay(date1);
+    cout << "01-Subtracting One Day           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDays(date2, 10);
+    cout << "02-Subtracting 10 Days           : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneWeek(date2);
+    cout << "03-Subtracting One Week          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXWeeks(date2, 10);
+    cout << "04-Subtracting 10 Weeks          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMonth(date2);
+    cout << "05-Subtracting One Month         : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXMonths(date2, 5);
+    cout << "06-Subtracting 5 Months          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneYear(date2);
+    cout << "07-Subtracting One Year          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYears(date2, 10);
+    cout << "08-Subtracting 10 Years          : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXYearsFaster(date2, 10);
+    cout << "09-Subtracting 10 Years Faster   : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneDecade(date2);
+    cout << "10-Subtracting One Decade        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecades(date2, 10);
+    cout << "11-Subtracting 10 Decades        : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByXDecadesFaster(date2, 10);
+    cout << "12-Subtracting 10 Decades Faster : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneCentury(date2);
+    cout << "13-Subtracting One Century       : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+    date2 = DecreaseDateByOneMillennium(date2);
+    cout << "14-Subtracting One Millennium    : " << date2.day << "/" << date2.month << "/" << date2.year << "\n";
+
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+واضح ومناسب تعليميًا، مع إمكانية استخدام النسخة السريعة لاحقًا لتحسين الأداء.
+
 </div>
 
