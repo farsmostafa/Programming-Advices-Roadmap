@@ -11133,5 +11133,724 @@ int main()
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
 حل مختصر وقوي، ويستخدم في مسائل عدّ التداخل لاحقًا.
 
+## 🧩 Problem #61: Count Overlap Days
+### 📝 وصف المشكلة (Problem Description)
+عدّ عدد الأيام المشتركة فعليًا بين فترتين زمنيتين.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نتأكد أولًا أن الفترتين تتداخلان، ثم نمشي على الفترة الأقصر يومًا بيوم ونعد الأيام التي تقع داخل الفترة الأخرى.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+struct stPeriod
+{
+    sDate StartDate;
+    sDate EndDate;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+bool IsDate1AfterDate2(sDate date1, sDate date2)
+{
+    return (!IsDate1BeforeDate2(date1, date2) && !IsDate1EqualsDate2(date1, date2));
+}
+
+enum enDateCompare
+{
+    Before = -1,
+    Equal = 0,
+    After = 1
+};
+
+enDateCompare CompareDates(sDate Date1, sDate Date2)
+{
+    if (IsDate1BeforeDate2(Date1, Date2))
+        return enDateCompare::Before;
+    if (IsDate1EqualsDate2(Date1, Date2))
+        return enDateCompare::Equal;
+    return enDateCompare::After;
+}
+
+bool IsOverlapPeriods(stPeriod Period1, stPeriod Period2)
+{
+    if (
+        CompareDates(Period2.EndDate, Period1.StartDate) ==
+            enDateCompare::Before ||
+        CompareDates(Period2.StartDate, Period1.EndDate) ==
+            enDateCompare::After)
+        return false;
+    else
+        return true;
+}
+
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bool swapFlagValue = false)
+{
+    if (IsDate1BeforeDate2(date2, date1))
+    {
+        return GetDifferenceInDays(date2, date1, IncludeEndDay, true);
+    }
+    int counter = 0;
+    while (IsDate1BeforeDate2(date1, date2))
+    {
+        date1 = IncreaseDateByOneDay(date1);
+        counter++;
+    }
+    counter += IncludeEndDay ? 1 : 0;
+    return swapFlagValue ? -counter : counter;
+}
+
+int PeriodLengthInDays(stPeriod Period, bool IncludeEndDate = false)
+{
+    return GetDifferenceInDays(Period.StartDate, Period.EndDate, IncludeEndDate);
+}
+
+bool isDateInPeriod(sDate date, stPeriod period)
+{
+    return !(IsDate1BeforeDate2(date, period.StartDate) || IsDate1AfterDate2(date, period.EndDate));
+}
+
+int CountOverlapDays(stPeriod Period1, stPeriod Period2)
+{
+    int Period1Length = PeriodLengthInDays(Period1, true);
+    int Period2Length = PeriodLengthInDays(Period2, true);
+    int OverlapDays = 0;
+    if (!IsOverlapPeriods(Period1, Period2))
+        return 0;
+    if (Period1Length < Period2Length)
+    {
+        while (IsDate1BeforeDate2(Period1.StartDate,
+                                Period1.EndDate))
+        {
+            if (isDateInPeriod(Period1.StartDate, Period2))
+                OverlapDays++;
+            Period1.StartDate =
+                IncreaseDateByOneDay(Period1.StartDate);
+        }
+    }
+    else
+    {
+        while (IsDate1BeforeDate2(Period2.StartDate,
+                                Period2.EndDate))
+        {
+            if (isDateInPeriod(Period2.StartDate, Period1))
+                OverlapDays++;
+            Period2.StartDate =
+                IncreaseDateByOneDay(Period2.StartDate);
+        }
+    }
+    return OverlapDays;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #61 :Write a program to read a tow periods then count overlap days?\n\n";
+    cout << "\tex     : Enter Period 1:\n";
+    cout << "\t       : Enter Date 1:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 1\n";
+    cout << "\t\t\tEnter a day   to check? : 1\n";
+    cout << "\t       : Enter Date 2:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 1\n";
+    cout << "\t\t\tEnter a day   to check? : 10\n";
+    cout << "\t       : Enter Period 2:\n";
+    cout << "\t       : Enter Date 1:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 1\n";
+    cout << "\t\t\tEnter a day   to check? : 5\n";
+    cout << "\t       : Enter Date 2:\n";
+    cout << "\t\t\tEnter a year  to check? : 2050\n";
+    cout << "\t\t\tEnter a month to check? : 12\n";
+    cout << "\t\t\tEnter a day   to check? : 30\n";
+    cout << "\toutput  : Overlap Days Count = 5";
+    cout << "\n\n-------------------------------------------------\n\n";
+    stPeriod Period1, Period2;
+    cout << "Enter Period 1:\n";
+    Period1.StartDate = ReadDate("Enter Date 1:");
+    Period1.EndDate = ReadDate("Enter Date 2:");
+    cout << "Enter Period 2:\n";
+    Period2.StartDate = ReadDate("Enter Date 1:");
+    Period2.EndDate = ReadDate("Enter Date 2:");
+    cout << "Overlap Days Count = " << CountOverlapDays(Period1, Period2) << "\n";
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+اختيار الفترة الأقصر يقلل عدد التكرارات، وهذه لمسة أداء جيدة.
+## 🧩 Problem #62: Validate Date
+### 📝 وصف المشكلة (Problem Description)
+التحقق من صلاحية تاريخ حتى إذا دخل المستخدم اليوم والشهر والسنة بدون قيود مسبقة.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نرفض اليوم خارج 1..31، ونرفض الشهر خارج 1..12، ثم نتحقق أن اليوم لا يتجاوز أيام الشهر الفعلية.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From = INT_MIN, int To = INT_MAX)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month: ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day  : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsValidDate(sDate date)
+{
+    if (date.day < 1 || date.day > 31)
+    {
+        return false;
+    }
+
+    if (date.month < 1 || date.month > 12)
+    {
+        return false;
+    }
+
+    if (date.day < 1 || date.day > NumberOfDaysInMonth(date.month, date.year))
+    {
+        return false;
+    }
+
+    return true;
+}
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #62 :Write a program to read Date and write a function to validate this date\n\n";
+    cout << "\tex     : Enter Date:\n";
+    cout << "\t\t\tEnter a year : 2022\n";
+    cout << "\t\t\tEnter a month: 1\n";
+    cout << "\t\t\tEnter a day  : 1\n";
+    cout << "\toutput : Yes, this Date is valid.\n";
+    cout << "\tex     : Enter Date:\n";
+    cout << "\t\t\tEnter a year : 2022\n";
+    cout << "\t\t\tEnter a month: 2\n";
+    cout << "\t\t\tEnter a day  : 31\n";
+    cout << "\toutput : No, this Date is not valid.\n";
+    cout << "\n\n-------------------------------------------------\n\n";
+    sDate date;
+    date.day = ReadPositiveNumberInRange("Enter a day  : ");
+    date.month = ReadPositiveNumberInRange("Enter a month: ");
+    date.year = ReadPositiveNumberInRange("Enter a year : ");
+    if (IsValidDate(date))
+    {
+        cout << "\nYes, this Date is valid.\n";
+    }
+    else
+    {
+        cout << "\nNo, this Date is not valid.\n";
+    }
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+مهم جدًا قبل أي Parsing أو عمليات تاريخ. ملاحظة: استخدام INT_MIN/INT_MAX يحتاج تضمين <climits> لضمان الاعتمادية.
+## 🧩 Problem #63: Read Date String
+### 📝 وصف المشكلة (Problem Description)
+قراءة التاريخ كسلسلة نصية بالشكل dd/mm/yyyy وتحويلها إلى أجزاء مفهومة.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نستخدم SplitString لتقطيع النص على /، ثم نحول كل جزء إلى رقم باستخدام stoi ونخزنه داخل sDate.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+using namespace std;
+
+string ReadString(string Message)
+{
+    string sInput;
+    cout << Message;
+    getline(cin >> ws, sInput);
+    return sInput;
+}
+
+struct sDate
+{
+    short Year;
+    short Month;
+    short Day;
+};
+
+vector<string> SplitString(string S1, string Delim)
+{
+    vector<string> vString;
+    short pos = 0;
+    string sWord;
+    while ((pos = S1.find(Delim)) != std::string::npos)
+    {
+        sWord = S1.substr(0, pos);
+        if (sWord != "")
+        {
+            vString.push_back(sWord);
+        }
+        S1.erase(0, pos + Delim.length());
+    }
+    if (S1 != "")
+    {
+        vString.push_back(S1);
+        return vString;
+    }
+}
+string DateToString(sDate Date)
+{
+    return to_string(Date.Day) + "/" + to_string(Date.Month) +
+           "/" + to_string(Date.Year);
+}
+sDate StringToDate(string DateString)
+{
+    sDate Date;
+    vector<string> vDate;
+    vDate = SplitString(DateString, "/");
+    Date.Day = stoi(vDate[0]);
+    Date.Month = stoi(vDate[1]);
+    Date.Year = stoi(vDate[2]);
+    return Date;
+}
+string ReadStringDate(string Message)
+{
+    string DateString;
+    cout << Message;
+    getline(cin >> ws, DateString);
+    return DateString;
+}
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #63 & #64 :Write a program to\n\n";
+    cout << "\t1- Read Date String.\n";
+    cout << "\t2- Convert it to date structure.\n";
+    cout << "\t3- Print Day, Month, Year separately.\n";
+    cout << "\t4- Then convert Date Structure to string and print it on the screen.";
+    cout << "\tex     : Please Enter Date dd/mm/yyyy? 31/3/2022\n";
+    cout << "\toutput : Day: 31\n";
+    cout << "\t\t\tMonth: 3\n";
+    cout << "\t\t\tYear: 2022\n";
+    cout << "\t\t\tDate: 31/3/2022\n";
+    cout << "\n\n-------------------------------------------------\n\n";
+
+    string dateString = ReadStringDate("Please Enter Date dd/mm/yyyy? ");
+    sDate date = StringToDate(dateString);
+    cout << "\nDay: " << date.Day;
+    cout << "\nMonth: " << date.Month;  
+    cout << "\nYear: " << date.Year;
+    cout << "\nDate: " << DateToString(date);
+
+    cout << "\n\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+Parsing النصوص خطوة مهمة قبل التعامل مع التاريخ القادم من المستخدم أو الملفات.
+## 🧩 Problem #64: Print Date String
+### 📝 وصف المشكلة (Problem Description)
+تحويل sDate مرة أخرى إلى String بصيغة day/month/year وطباعتها.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نستخدم to_string لكل جزء ثم نركب النص النهائي بالفواصل / بين اليوم والشهر والسنة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+using namespace std;
+
+string ReadString(string Message)
+{
+    string sInput;
+    cout << Message;
+    getline(cin >> ws, sInput);
+    return sInput;
+}
+
+struct sDate
+{
+    short Year;
+    short Month;
+    short Day;
+};
+
+vector<string> SplitString(string S1, string Delim)
+{
+    vector<string> vString;
+    short pos = 0;
+    string sWord;
+    while ((pos = S1.find(Delim)) != std::string::npos)
+    {
+        sWord = S1.substr(0, pos);
+        if (sWord != "")
+        {
+            vString.push_back(sWord);
+        }
+        S1.erase(0, pos + Delim.length());
+    }
+    if (S1 != "")
+    {
+        vString.push_back(S1);
+        return vString;
+    }
+}
+string DateToString(sDate Date)
+{
+    return to_string(Date.Day) + "/" + to_string(Date.Month) +
+           "/" + to_string(Date.Year);
+}
+sDate StringToDate(string DateString)
+{
+    sDate Date;
+    vector<string> vDate;
+    vDate = SplitString(DateString, "/");
+    Date.Day = stoi(vDate[0]);
+    Date.Month = stoi(vDate[1]);
+    Date.Year = stoi(vDate[2]);
+    return Date;
+}
+string ReadStringDate(string Message)
+{
+    string DateString;
+    cout << Message;
+    getline(cin >> ws, DateString);
+    return DateString;
+}
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #63 & #64 :Write a program to\n\n";
+    cout << "\t1- Read Date String.\n";
+    cout << "\t2- Convert it to date structure.\n";
+    cout << "\t3- Print Day, Month, Year separately.\n";
+    cout << "\t4- Then convert Date Structure to string and print it on the screen.";
+    cout << "\tex     : Please Enter Date dd/mm/yyyy? 31/3/2022\n";
+    cout << "\toutput : Day: 31\n";
+    cout << "\t\t\tMonth: 3\n";
+    cout << "\t\t\tYear: 2022\n";
+    cout << "\t\t\tDate: 31/3/2022\n";
+    cout << "\n\n-------------------------------------------------\n\n";
+
+    string dateString = ReadStringDate("Please Enter Date dd/mm/yyyy? ");
+    sDate date = StringToDate(dateString);
+    cout << "\nDay: " << date.Day;
+    cout << "\nMonth: " << date.Month;  
+    cout << "\nYear: " << date.Year;
+    cout << "\nDate: " << DateToString(date);
+
+    cout << "\n\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+بهذا نغلق دورة التحويل: String -> Struct -> String، وهي أساسية لأي نظام إدخال/إخراج.
+## 🧩 Problem #65: Format Date
+### 📝 وصف المشكلة (Problem Description)
+قراءة تاريخ ثم طباعته بأي Format يطلبه المستخدم مثل yyyy/dd-mm أو dd-mm-yyyy.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نستبدل الرموز dd و mm و yyyy بالقيم الفعلية باستخدام ReplaceWordInString بشكل متتابع.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+using namespace std;
+
+string ReadString(string Message)
+{
+    string sInput;
+    cout << Message;
+    getline(cin >> ws, sInput);
+    return sInput;
+}
+
+struct sDate
+{
+    short Year;
+    short Month;
+    short Day;
+};
+
+vector<string> SplitString(string S1, string Delim)
+{
+    vector<string> vString;
+    short pos = 0;
+    string sWord;
+    while ((pos = S1.find(Delim)) != std::string::npos)
+    {
+        sWord = S1.substr(0, pos);
+        if (sWord != "")
+        {
+            vString.push_back(sWord);
+        }
+        S1.erase(0, pos + Delim.length());
+    }
+    if (S1 != "")
+    {
+        vString.push_back(S1);
+        return vString;
+    }
+}
+string DateToString(sDate Date)
+{
+    return to_string(Date.Day) + "/" + to_string(Date.Month) +
+           "/" + to_string(Date.Year);
+}
+sDate StringToDate(string DateString)
+{
+    sDate Date;
+    vector<string> vDate;
+    vDate = SplitString(DateString, "/");
+    Date.Day = stoi(vDate[0]);
+    Date.Month = stoi(vDate[1]);
+    Date.Year = stoi(vDate[2]);
+    return Date;
+}
+string ReadStringDate(string Message)
+{
+    string DateString;
+    cout << Message;
+    getline(cin >> ws, DateString);
+    return DateString;
+}
+string ReplaceWordInString(string S1, string StringToReplace, string sRepalceTo)
+{
+    short pos = S1.find(StringToReplace);
+    while (pos != std::string::npos)
+    {
+        S1 = S1.replace(pos, StringToReplace.length(),
+                        sRepalceTo);
+        pos = S1.find(StringToReplace);
+    }
+    return S1;
+}
+
+string FormateDate(sDate Date, string DateFormat = "dd/mm/yyyy")
+{
+    string FormattedDateString = "";
+    FormattedDateString = ReplaceWordInString(DateFormat, "dd", to_string(Date.Day));
+    FormattedDateString = ReplaceWordInString(FormattedDateString, "mm", to_string(Date.Month));
+    FormattedDateString = ReplaceWordInString(FormattedDateString, "yyyy", to_string(Date.Year));
+    return FormattedDateString;
+}
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #65 :Write a program to read Date and write a function to format that date.\n\n";
+    cout << "\tex     : Please Enter Date dd/mm/yyyy? 31/3/2022\n";
+    cout << "\t       : Please Enter New Format? yyyy/dd-mm\n";
+    cout << "\toutput : 2022/31-3\n";
+    cout << "\t       : Day: 31, Month: 3, Year: 2022\n";
+    cout << "\n\n-------------------------------------------------\n\n";
+
+    string dateString = ReadStringDate("Please Enter Date dd/mm/yyyy? ");
+    string formatString = ReadString("Please Enter New Format? ");
+    sDate date = StringToDate(dateString);
+    string FormattedDate = FormateDate(date, formatString);
+    cout << "Formatted Date: " << FormattedDate;
+    cout << "\nDay: " << date.Day << ", Month: " << date.Month << ", Year: " << date.Year;
+    cout << "\n\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+فكرة ممتازة وقابلة للتوسيع، لكن اسم FormateDate فيه typo بسيط والأفضل لاحقًا FormatDate.
+
 </div>
 
