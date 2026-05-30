@@ -887,7 +887,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -994,7 +994,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1010,7 +1010,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1136,7 +1136,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1152,7 +1152,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1254,7 +1254,7 @@ bool IsDate1BeforeDate2(sDate date1, sDate date2){
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1270,7 +1270,7 @@ bool IsDate1BeforeDate2(sDate date1, sDate date2){
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1369,7 +1369,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1385,7 +1385,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1474,7 +1474,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1490,7 +1490,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1593,7 +1593,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1609,7 +1609,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1748,7 +1748,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1764,7 +1764,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -1909,7 +1909,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -1925,7 +1925,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2064,7 +2064,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -2080,7 +2080,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2348,7 +2348,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -2365,7 +2365,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2633,7 +2633,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -2649,7 +2649,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -2917,7 +2917,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -2933,7 +2933,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -3201,7 +3201,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -3217,7 +3217,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -3485,7 +3485,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -3501,7 +3501,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -3769,7 +3769,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -3785,7 +3785,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -4053,7 +4053,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -4069,7 +4069,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -4337,7 +4337,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -4353,7 +4353,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -4621,7 +4621,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -4637,7 +4637,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -4905,7 +4905,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -4921,7 +4921,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -5189,7 +5189,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -5206,7 +5206,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -5474,7 +5474,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -5490,7 +5490,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -5758,7 +5758,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -5774,7 +5774,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -6047,7 +6047,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -6063,7 +6063,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -6336,7 +6336,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -6352,7 +6352,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -6625,7 +6625,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -6641,7 +6641,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -6914,7 +6914,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -6930,7 +6930,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -7203,7 +7203,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -7219,7 +7219,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -7492,7 +7492,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -7508,7 +7508,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -7781,7 +7781,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -7797,7 +7797,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -8070,7 +8070,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -8087,7 +8087,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -8360,7 +8360,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -8376,7 +8376,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -8649,7 +8649,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -8665,7 +8665,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -8938,7 +8938,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -8954,7 +8954,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -9227,7 +9227,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -9243,7 +9243,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -9516,7 +9516,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -9532,7 +9532,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -9805,7 +9805,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -9821,7 +9821,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -9991,7 +9991,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -10007,7 +10007,7 @@ Overloading هنا يحسن قابلية القراءة ويقلل أخطاء ت
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -10177,7 +10177,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -10193,7 +10193,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -10363,7 +10363,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -10379,7 +10379,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -10549,7 +10549,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -10566,7 +10566,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -10736,7 +10736,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -10752,7 +10752,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -10922,7 +10922,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -10938,7 +10938,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -11108,7 +11108,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -11124,7 +11124,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -11316,7 +11316,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -11332,7 +11332,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -11518,7 +11518,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -11534,7 +11534,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -11646,7 +11646,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -11662,7 +11662,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -11787,7 +11787,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -11803,7 +11803,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -11961,7 +11961,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -11977,7 +11977,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -12163,7 +12163,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -12179,7 +12179,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -12332,7 +12332,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -12349,7 +12349,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -12594,7 +12594,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -12610,7 +12610,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -12716,7 +12716,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -12732,7 +12732,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -12823,7 +12823,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -12839,7 +12839,7 @@ Parsing النصوص خطوة مهمة قبل التعامل مع التاريخ
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -12930,7 +12930,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
@@ -12946,7 +12946,7 @@ int main()
 ### 💻 الكود المعتمد (Solution)
 <div dir="ltr">
 
-`cpp
+```cpp
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -13051,7 +13051,7 @@ int main()
     cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
     return 0;
 }
-`
+```
 
 </div>
 
