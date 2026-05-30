@@ -9350,5 +9350,1788 @@ int main()
 ### 🛠️ ملاحظات هندسية (Engineering Notes)
 تصميم ممتاز لأنه يمنع تكرار تعريف الويك إند في أكثر من مكان.
 
+## 🧩 Problem #51: Days Until End Of Week
+### 📝 وصف المشكلة (Problem Description)
+حساب عدد الأيام المتبقية حتى نهاية الأسبوع من تاريخ معين.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نطرح ترتيب اليوم الحالي من ترتيب نهاية الأسبوع 6، فينتج عدد الأيام المتبقية.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate GetSystemDate()
+{
+    time_t t = time(0);
+    tm *now = localtime(&t);
+    sDate date;
+    date.year = now->tm_year + 1900;
+    date.month = now->tm_mon + 1;
+    date.day = now->tm_mday;
+    return date;
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+short DayOfWeekOrder(int day, int month, int year)
+{
+    short a = (14 - month) / 12;
+    short y = year - a;
+    short m = month + 12 * a - 2;
+    return (day + y + y / 4 - y / 100 + y / 400 + (31 * m) / 12) % 7;
+}
+
+short DayOfWeekOrder(sDate Date)
+{
+    return DayOfWeekOrder(Date.day, Date.month, Date.year);
+}
+
+string DayShortName(short dayOrder)
+{
+    string dayNames[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    return dayNames[dayOrder];
+}
+
+bool IsEndOfWeek(sDate Date)
+{
+    return DayOfWeekOrder(Date) == 6;
+}
+
+bool IsWeekEnd(sDate Date)
+{
+    short DayIndex = DayOfWeekOrder(Date);
+    return (DayIndex == 5 || DayIndex == 6);
+}
+
+bool IsBusinessDay(sDate Date)
+{
+    return !IsWeekEnd(Date);
+}
+
+short DaysUntilTheEndOfWeek(sDate Date)
+{
+    return 6 - DayOfWeekOrder(Date);
+}
+
+short DaysUntilTheEndOfMonth(sDate Date)
+{
+    return NumberOfDaysInMonth(Date.month, Date.year) - Date.day + 1; // +1 to include the current day
+}
+
+short DaysUntilTheEndOfYear(sDate Date)
+{
+    short totalDaysInYear = IsLeapYear(Date.year) ? 366 : 365;
+    short daysPassed = NumberOfDaysFromTheBeginingOfTheYear(Date.day, Date.month, Date.year);
+    return totalDaysInYear - daysPassed + 1; // +1 to include the current day
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #47 To #53 : Write a program to read a date and make functions as follows:\n";
+    cout << "   - Overload the DayOfWeekOrder to take date structure\n";
+    cout << "   - IsEndOfWeek\n";
+    cout << "   - IsWeekEnd\n";
+    cout << "   - IsBusinessDay\n";
+    cout << "   - DaysUntilTheEndOfWeek\n";
+    cout << "   - DaysUntilTheEndOfMonth\n";
+    cout << "   - DaysUntilTheEndOfYear\n";
+    cout << "\tex     : Today is Friday, 23/9/2022\n";
+    cout << "\toutput : Is it End of Week ?\n";
+    cout << "\t         => No Not end of week\n";
+    cout << "\t         Is it Week End ?\n";
+    cout << "\t         => Yes it is a Week end\n";
+    cout << "\t         Is it Business Day ?\n";
+    cout << "\t         => No it is Not a Business day\n";
+    cout << "\t         - Days until the end of week  : 1 Day(s)\n";
+    cout << "\t         - Days until the end of month : 8 Day(s)\n";
+    cout << "\t         - Days until the end of year  : 100 Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    sDate date1 = GetSystemDate();
+    cout << "Today is " << DayShortName(DayOfWeekOrder(date1)) << ", " << date1.day << "/" << date1.month << "/" << date1.year << "\n\n";
+    cout << "Is it End of Week ?\n";
+    cout << "=> " << (IsEndOfWeek(date1) ? "Yes, it is End of week" : "No, it is Not end of week") << "\n";
+    cout << "Is it Week End ?\n";
+    cout << "=> " << (IsWeekEnd(date1) ? "Yes, it is a Week end" : "No, it is Not a Week end") << "\n";
+    cout << "Is it Business Day ?\n";
+    cout << "=> " << (IsBusinessDay(date1) ? "Yes, it is a Business day" : "No, it is Not a Business day") << "\n";
+    cout << "- Days until the end of week  : " << DaysUntilTheEndOfWeek(date1) << " Day(s)\n";
+    cout << "- Days until the end of month : " << DaysUntilTheEndOfMonth(date1) << " Day(s)\n";
+    cout << "- Days until the end of year  : " << DaysUntilTheEndOfYear(date1) << " Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+دالة بسيطة ومباشرة، ومفيدة في التقارير اليومية والأسبوعية.
+## 🧩 Problem #52: Days Until End Of Month
+### 📝 وصف المشكلة (Problem Description)
+حساب عدد الأيام المتبقية حتى نهاية الشهر مع تضمين اليوم الحالي.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نطرح اليوم الحالي من عدد أيام الشهر ثم نضيف 1 لتضمين اليوم نفسه.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate GetSystemDate()
+{
+    time_t t = time(0);
+    tm *now = localtime(&t);
+    sDate date;
+    date.year = now->tm_year + 1900;
+    date.month = now->tm_mon + 1;
+    date.day = now->tm_mday;
+    return date;
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+short DayOfWeekOrder(int day, int month, int year)
+{
+    short a = (14 - month) / 12;
+    short y = year - a;
+    short m = month + 12 * a - 2;
+    return (day + y + y / 4 - y / 100 + y / 400 + (31 * m) / 12) % 7;
+}
+
+short DayOfWeekOrder(sDate Date)
+{
+    return DayOfWeekOrder(Date.day, Date.month, Date.year);
+}
+
+string DayShortName(short dayOrder)
+{
+    string dayNames[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    return dayNames[dayOrder];
+}
+
+bool IsEndOfWeek(sDate Date)
+{
+    return DayOfWeekOrder(Date) == 6;
+}
+
+bool IsWeekEnd(sDate Date)
+{
+    short DayIndex = DayOfWeekOrder(Date);
+    return (DayIndex == 5 || DayIndex == 6);
+}
+
+bool IsBusinessDay(sDate Date)
+{
+    return !IsWeekEnd(Date);
+}
+
+short DaysUntilTheEndOfWeek(sDate Date)
+{
+    return 6 - DayOfWeekOrder(Date);
+}
+
+short DaysUntilTheEndOfMonth(sDate Date)
+{
+    return NumberOfDaysInMonth(Date.month, Date.year) - Date.day + 1; // +1 to include the current day
+}
+
+short DaysUntilTheEndOfYear(sDate Date)
+{
+    short totalDaysInYear = IsLeapYear(Date.year) ? 366 : 365;
+    short daysPassed = NumberOfDaysFromTheBeginingOfTheYear(Date.day, Date.month, Date.year);
+    return totalDaysInYear - daysPassed + 1; // +1 to include the current day
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #47 To #53 : Write a program to read a date and make functions as follows:\n";
+    cout << "   - Overload the DayOfWeekOrder to take date structure\n";
+    cout << "   - IsEndOfWeek\n";
+    cout << "   - IsWeekEnd\n";
+    cout << "   - IsBusinessDay\n";
+    cout << "   - DaysUntilTheEndOfWeek\n";
+    cout << "   - DaysUntilTheEndOfMonth\n";
+    cout << "   - DaysUntilTheEndOfYear\n";
+    cout << "\tex     : Today is Friday, 23/9/2022\n";
+    cout << "\toutput : Is it End of Week ?\n";
+    cout << "\t         => No Not end of week\n";
+    cout << "\t         Is it Week End ?\n";
+    cout << "\t         => Yes it is a Week end\n";
+    cout << "\t         Is it Business Day ?\n";
+    cout << "\t         => No it is Not a Business day\n";
+    cout << "\t         - Days until the end of week  : 1 Day(s)\n";
+    cout << "\t         - Days until the end of month : 8 Day(s)\n";
+    cout << "\t         - Days until the end of year  : 100 Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    sDate date1 = GetSystemDate();
+    cout << "Today is " << DayShortName(DayOfWeekOrder(date1)) << ", " << date1.day << "/" << date1.month << "/" << date1.year << "\n\n";
+    cout << "Is it End of Week ?\n";
+    cout << "=> " << (IsEndOfWeek(date1) ? "Yes, it is End of week" : "No, it is Not end of week") << "\n";
+    cout << "Is it Week End ?\n";
+    cout << "=> " << (IsWeekEnd(date1) ? "Yes, it is a Week end" : "No, it is Not a Week end") << "\n";
+    cout << "Is it Business Day ?\n";
+    cout << "=> " << (IsBusinessDay(date1) ? "Yes, it is a Business day" : "No, it is Not a Business day") << "\n";
+    cout << "- Days until the end of week  : " << DaysUntilTheEndOfWeek(date1) << " Day(s)\n";
+    cout << "- Days until the end of month : " << DaysUntilTheEndOfMonth(date1) << " Day(s)\n";
+    cout << "- Days until the end of year  : " << DaysUntilTheEndOfYear(date1) << " Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+التعليق داخل الكود واضح ويشرح سبب +1، وهذه نقطة ممتازة.
+## 🧩 Problem #53: Days Until End Of Year
+### 📝 وصف المشكلة (Problem Description)
+حساب عدد الأيام المتبقية حتى نهاية السنة مع تضمين اليوم الحالي.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نحسب عدد أيام السنة، ونحسب الأيام المنقضية من بدايتها، ثم نطرح ونضيف 1 للتضمين.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+sDate GetSystemDate()
+{
+    time_t t = time(0);
+    tm *now = localtime(&t);
+    sDate date;
+    date.year = now->tm_year + 1900;
+    date.month = now->tm_mon + 1;
+    date.day = now->tm_mday;
+    return date;
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+short DayOfWeekOrder(int day, int month, int year)
+{
+    short a = (14 - month) / 12;
+    short y = year - a;
+    short m = month + 12 * a - 2;
+    return (day + y + y / 4 - y / 100 + y / 400 + (31 * m) / 12) % 7;
+}
+
+short DayOfWeekOrder(sDate Date)
+{
+    return DayOfWeekOrder(Date.day, Date.month, Date.year);
+}
+
+string DayShortName(short dayOrder)
+{
+    string dayNames[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    return dayNames[dayOrder];
+}
+
+bool IsEndOfWeek(sDate Date)
+{
+    return DayOfWeekOrder(Date) == 6;
+}
+
+bool IsWeekEnd(sDate Date)
+{
+    short DayIndex = DayOfWeekOrder(Date);
+    return (DayIndex == 5 || DayIndex == 6);
+}
+
+bool IsBusinessDay(sDate Date)
+{
+    return !IsWeekEnd(Date);
+}
+
+short DaysUntilTheEndOfWeek(sDate Date)
+{
+    return 6 - DayOfWeekOrder(Date);
+}
+
+short DaysUntilTheEndOfMonth(sDate Date)
+{
+    return NumberOfDaysInMonth(Date.month, Date.year) - Date.day + 1; // +1 to include the current day
+}
+
+short DaysUntilTheEndOfYear(sDate Date)
+{
+    short totalDaysInYear = IsLeapYear(Date.year) ? 366 : 365;
+    short daysPassed = NumberOfDaysFromTheBeginingOfTheYear(Date.day, Date.month, Date.year);
+    return totalDaysInYear - daysPassed + 1; // +1 to include the current day
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #47 To #53 : Write a program to read a date and make functions as follows:\n";
+    cout << "   - Overload the DayOfWeekOrder to take date structure\n";
+    cout << "   - IsEndOfWeek\n";
+    cout << "   - IsWeekEnd\n";
+    cout << "   - IsBusinessDay\n";
+    cout << "   - DaysUntilTheEndOfWeek\n";
+    cout << "   - DaysUntilTheEndOfMonth\n";
+    cout << "   - DaysUntilTheEndOfYear\n";
+    cout << "\tex     : Today is Friday, 23/9/2022\n";
+    cout << "\toutput : Is it End of Week ?\n";
+    cout << "\t         => No Not end of week\n";
+    cout << "\t         Is it Week End ?\n";
+    cout << "\t         => Yes it is a Week end\n";
+    cout << "\t         Is it Business Day ?\n";
+    cout << "\t         => No it is Not a Business day\n";
+    cout << "\t         - Days until the end of week  : 1 Day(s)\n";
+    cout << "\t         - Days until the end of month : 8 Day(s)\n";
+    cout << "\t         - Days until the end of year  : 100 Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+
+    sDate date1 = GetSystemDate();
+    cout << "Today is " << DayShortName(DayOfWeekOrder(date1)) << ", " << date1.day << "/" << date1.month << "/" << date1.year << "\n\n";
+    cout << "Is it End of Week ?\n";
+    cout << "=> " << (IsEndOfWeek(date1) ? "Yes, it is End of week" : "No, it is Not end of week") << "\n";
+    cout << "Is it Week End ?\n";
+    cout << "=> " << (IsWeekEnd(date1) ? "Yes, it is a Week end" : "No, it is Not a Week end") << "\n";
+    cout << "Is it Business Day ?\n";
+    cout << "=> " << (IsBusinessDay(date1) ? "Yes, it is a Business day" : "No, it is Not a Business day") << "\n";
+    cout << "- Days until the end of week  : " << DaysUntilTheEndOfWeek(date1) << " Day(s)\n";
+    cout << "- Days until the end of month : " << DaysUntilTheEndOfMonth(date1) << " Day(s)\n";
+    cout << "- Days until the end of year  : " << DaysUntilTheEndOfYear(date1) << " Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+يعتمد بشكل ممتاز على دوال سابقة بدل إعادة بناء الحساب من الصفر.
+## 🧩 Problem #54: Calculate Vacation Days
+### 📝 وصف المشكلة (Problem Description)
+حساب أيام الإجازة الفعلية بين تاريخ بداية ونهاية مع استبعاد أيام نهاية الأسبوع.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نمر يومًا بيوم على الفترة، ونزيد العداد فقط إذا كان اليوم Business Day.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    return date;
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+short DayOfWeekOrder(int day, int month, int year)
+{
+    short a = (14 - month) / 12;
+    short y = year - a;
+    short m = month + 12 * a - 2;
+    return (day + y + y / 4 - y / 100 + y / 400 + (31 * m) / 12) % 7;
+}
+
+short DayOfWeekOrder(sDate Date)
+{
+    return DayOfWeekOrder(Date.day, Date.month, Date.year);
+}
+
+string DayShortName(short dayOrder)
+{
+    string dayNames[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    return dayNames[dayOrder];
+}
+
+bool IsEndOfWeek(sDate Date)
+{
+    return DayOfWeekOrder(Date) == 6;
+}
+
+bool IsWeekEnd(sDate Date)
+{
+    short DayIndex = DayOfWeekOrder(Date);
+    return (DayIndex == 5 || DayIndex == 6);
+}
+
+bool IsBusinessDay(sDate Date)
+{
+    return !IsWeekEnd(Date);
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+short CalculateVacationDays(sDate vacationStart, sDate vacationEnd, bool swapFlagValue = false)
+{
+    if (IsDate1BeforeDate2(vacationEnd, vacationStart))
+    {
+        return CalculateVacationDays(vacationEnd, vacationStart, true);
+    }
+    int counter = 0;
+    while (IsDate1BeforeDate2(vacationStart, vacationEnd))
+    {
+
+        counter += IsBusinessDay(vacationStart) ? 1 : 0; // Count the day if it's a business day
+        vacationStart = IncreaseDateByOneDay(vacationStart);
+    }
+    return counter;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #54 : Write a program to read Vacation Period DateFrom and DateTo and make a function to calculate the actual vacation days.\n";
+    cout << "            - Note: Weekends are excluded.";
+    cout << "\tex     : Vacation Starts:\n";
+    cout << "\t           - Please enter a Year? 2022\n";
+    cout << "\t           - Please enter a Month? 9\n";
+    cout << "\t           - Please enter a Day? 1\n";
+    cout << "\t         Vacation Ends:\n";
+    cout << "\t           - Please enter a Year? 2022\n";
+    cout << "\t           - Please enter a Month? 9\n";
+    cout << "\t           - Please enter a Day? 5\n";
+    cout << "\toutput : Vacation From : Thursday, 1/9/2022\n";
+    cout << "\t         Vacation To   : Monday, 5/9/2022\n\n";
+    cout << "\t         Actual Vacation Days : 2 Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    sDate vacationStart = ReadDate("Vacation Starts:");
+    sDate vacationEnd = ReadDate("Vacation Ends:");
+    cout << "\nVacation From : " << DayShortName(DayOfWeekOrder(vacationStart)) << ", " << vacationStart.day << "/" << vacationStart.month << "/" << vacationStart.year << "\n";
+    cout << "Vacation To   : " << DayShortName(DayOfWeekOrder(vacationEnd)) << ", " << vacationEnd.day << "/" << vacationEnd.month << "/" << vacationEnd.year << "\n\n";
+    short actualVacationDays = CalculateVacationDays(vacationStart, vacationEnd);
+    cout << "Actual Vacation Days : " << actualVacationDays << " Day(s)\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل صحيح وعملي، لكن فيه ملاحظة في ReadDate داخل الملف: قراءة اليوم قبل الشهر والسنة قد تجعل Validation اليوم يعتمد على قيم غير مهيأة.
+## 🧩 Problem #55: Calculate Vacation Return Date
+### 📝 وصف المشكلة (Problem Description)
+حساب تاريخ الرجوع من الإجازة بناءً على تاريخ البداية وعدد أيام الإجازة الفعلية.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نستهلك أيام الإجازة فقط في أيام العمل، وبعد انتهاء العدد نتخطى أي Weekend حتى نصل ليوم عمل.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+short DayOfWeekOrder(int day, int month, int year)
+{
+    short a = (14 - month) / 12;
+    short y = year - a;
+    short m = month + 12 * a - 2;
+    return (day + y + y / 4 - y / 100 + y / 400 + (31 * m) / 12) % 7;
+}
+
+short DayOfWeekOrder(sDate Date)
+{
+    return DayOfWeekOrder(Date.day, Date.month, Date.year);
+}
+
+string DayShortName(short dayOrder)
+{
+    string dayNames[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    return dayNames[dayOrder];
+}
+
+bool IsEndOfWeek(sDate Date)
+{
+    return DayOfWeekOrder(Date) == 6;
+}
+
+bool IsWeekEnd(sDate Date)
+{
+    short DayIndex = DayOfWeekOrder(Date);
+    return (DayIndex == 5 || DayIndex == 6);
+}
+
+bool IsBusinessDay(sDate Date)
+{
+    return !IsWeekEnd(Date);
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+sDate CalculateVacationReturnDate(sDate vacationStart, int vacationDays)
+{
+    while (vacationDays > 0)
+    {
+        if (IsBusinessDay(vacationStart))
+        {
+            vacationDays--;
+        }
+        vacationStart = IncreaseDateByOneDay(vacationStart);
+    }
+
+    while (IsWeekEnd(vacationStart))
+    {
+        vacationStart = IncreaseDateByOneDay(vacationStart);
+    }
+    return vacationStart;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #55 : Write a program to read Vacation Start DateFrom and make a function to calculate the vacation return Date.\n";
+    cout << "            - Note: Weekends are excluded.";
+    cout << "\tex     : Vacation Starts:\n";
+    cout << "\t           - Please enter a Day? 1\n";
+    cout << "\t           - Please enter a Month? 1\n";
+    cout << "\t           - Please enter a Year? 2022\n";
+    cout << "\t         Please enter a Vacation days? 23\n";
+    cout << "\toutput : Return Date: Wednesday, 2/2/2022\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    sDate vacationStart = ReadDate("Vacation Starts:");
+    int vacationDays = ReadPositiveNumberInRange("Please enter a Vacation days? ", 1, 365);
+    sDate returnDate = CalculateVacationReturnDate(vacationStart, vacationDays);
+    cout << "Return Date: " << DayShortName(DayOfWeekOrder(returnDate)) << ", " << returnDate.day << "/" << returnDate.month << "/" << returnDate.year;
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+منطق ممتاز لأن تاريخ العودة لا ينبغي أن يكون يوم عطلة.
+## 🧩 Problem #56: Is Date1 After Date2
+### 📝 وصف المشكلة (Problem Description)
+التحقق هل التاريخ الأول يأتي بعد التاريخ الثاني.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+بدل كتابة مقارنة جديدة، نستخدم نفي حالتي Before وEquals.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+bool IsDate1AfterDate2(sDate date1, sDate date2)
+{
+    return (!IsDate1BeforeDate2(date1, date2) && !IsDate1EqualsDate2(date1, date2));
+}
+
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #56 :Write a program to read date1, date2 and check if Date 1 after Date 2 or not\n";
+    cout << "\tex     : Please enter a year 1  ? 2022\n";
+    cout << "\t         Please enter a month 1 ? 10\n";
+    cout << "\t         Please enter a day 1   ? 10\n";
+    cout << "\t       : Please enter a year 2  ? 2022\n";
+    cout << "\t         Please enter a month 2 ? 4\n";
+    cout << "\t         Please enter a day 2   ? 10\n";
+    cout << "\toutput : Yes, Date 1 is After Date 2";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = ReadDate("Enter Date 2:");
+    if (IsDate1AfterDate2(date1, date2))
+    {
+        cout << "Yes, Date 1 is After Date 2";
+    }
+    else
+    {
+        cout << "No, Date 1 is not After Date 2";
+    }
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+تصميم نظيف جدًا ويقلل تكرار منطق المقارنة.
+## 🧩 Problem #57: Compare Date Function
+### 📝 وصف المشكلة (Problem Description)
+بناء دالة مقارنة موحدة تعيد Before أو Equal أو After.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نستخدم enum واضحًا، ثم نعتمد على دوال المقارنة السابقة لإرجاع الحالة المناسبة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+bool IsDate1AfterDate2(sDate date1, sDate date2)
+{
+    return (!IsDate1BeforeDate2(date1, date2) && !IsDate1EqualsDate2(date1, date2));
+}
+
+enum enDateCompare
+{
+    Before = -1,
+    Equal = 0,
+    After = 1
+};
+enDateCompare CompareDates(sDate Date1, sDate Date2)
+{
+    if (IsDate1BeforeDate2(Date1, Date2))
+        return enDateCompare::Before;
+    if (IsDate1EqualsDate2(Date1, Date2))
+        return enDateCompare::Equal;
+    return enDateCompare::After;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #57 :Write a program to read Date1 & Date2, and write a function to compare dates, it shoud return:\n";
+    cout << "\t\t-1 if Date1 is Before Date2\n";
+    cout << "\t\t 0 if Date1 is Equal Date2\n";
+    cout << "\t\t 1 if Date1 is After Date2\n";
+    cout << "\tex     : Enter Date 1:\n";
+    cout << "\t\t\tEnter a year  to check? : 2020\n";
+    cout << "\t\t\tEnter a month to check? : 2\n";
+    cout << "\t\t\tEnter a day   to check? : 29\n";
+    cout << "\t       : Enter Date 2:\n";
+    cout << "\t\t\tEnter a year  to check? : 2021\n";
+    cout << "\t\t\tEnter a month to check? : 1\n";
+    cout << "\t\t\tEnter a day   to check? : 1\n";
+    cout << "\toutput : Compare Result: -1 (Date 1 is Before Date 2)\n";
+    cout << "\n\n-------------------------------------------------\n";
+    sDate date1 = ReadDate("Enter Date 1:");
+    sDate date2 = ReadDate("Enter Date 2:");
+    short compareResult = CompareDates(date1, date2);
+    cout << "\nCompare Result: " << compareResult << " (Date 1 is " << (compareResult == -1 ? "Before" : (compareResult == 0 ? "Equal" : "After")) << " Date 2)\n"  ;
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+هذه الدالة تجعل بقية مسائل الفترات أكثر وضوحًا وأقل عرضة للأخطاء.
+## 🧩 Problem #58: Is Overlap Periods
+### 📝 وصف المشكلة (Problem Description)
+فحص هل فترتان زمنيتان تتداخلان.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+إذا انتهت الفترة الثانية قبل بداية الأولى أو بدأت بعد نهاية الأولى فلا يوجد تداخل، وإلا فهناك تداخل.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+struct stPeriod
+{
+    sDate StartDate;
+    sDate EndDate;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+bool IsDate1AfterDate2(sDate date1, sDate date2)
+{
+    return (!IsDate1BeforeDate2(date1, date2) && !IsDate1EqualsDate2(date1, date2));
+}
+
+enum enDateCompare
+{
+    Before = -1,
+    Equal = 0,
+    After = 1
+};
+
+enDateCompare CompareDates(sDate Date1, sDate Date2)
+{
+    if (IsDate1BeforeDate2(Date1, Date2))
+        return enDateCompare::Before;
+    if (IsDate1EqualsDate2(Date1, Date2))
+        return enDateCompare::Equal;
+    return enDateCompare::After;
+}
+
+bool IsOverlapPeriods(stPeriod Period1, stPeriod Period2)
+{
+    if (
+        CompareDates(Period2.EndDate, Period1.StartDate) ==
+            enDateCompare::Before ||
+        CompareDates(Period2.StartDate, Period1.EndDate) ==
+            enDateCompare::After)
+        return false;
+    else
+        return true;
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #58 :Write a program to read Two Periods and check if they overlap or not.\n\n";
+    cout << "\tex     : Enter Period 1:\n";
+    cout << "\t       : Enter Date 1:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 2\n";
+    cout << "\t\t\tEnter a day   to check? : 1\n";
+    cout << "\t       : Enter Date 2:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 2\n";
+    cout << "\t\t\tEnter a day   to check? : 10\n";
+    cout << "\t       : Enter Period 2:\n";
+    cout << "\t       : Enter Date 1:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 2\n";
+    cout << "\t\t\tEnter a day   to check? : 5\n";
+    cout << "\t       : Enter Date 2:\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 2\n";
+    cout << "\t\t\tEnter a day   to check? : 15\n";
+    cout << "\toutput  : Yes, the periods overlap.\n\n";
+    cout << "\n\n-------------------------------------------------\n";
+    stPeriod Period1, Period2;
+    cout << "Enter Period 1:\n";
+    Period1.StartDate = ReadDate("Enter Date 1:");
+    Period1.EndDate = ReadDate("Enter Date 2:");
+    cout << "Enter Period 2:\n";
+    Period2.StartDate = ReadDate("Enter Date 1:");
+    Period2.EndDate = ReadDate("Enter Date 2:");
+    if (IsOverlapPeriods(Period1, Period2))
+        cout << "Yes, the periods overlap.\n";
+    else
+        cout << "No, the periods do not overlap.\n";    
+        
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+شرط قياسي مهم جدًا في أي نظام حجوزات أو إجازات أو مواعيد.
+## 🧩 Problem #59: Period Length In Days
+### 📝 وصف المشكلة (Problem Description)
+حساب طول فترة بالأيام مع خيار تضمين تاريخ النهاية.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+نعيد استخدام GetDifferenceInDays بين StartDate و EndDate، ونمرر IncludeEndDate عند الحاجة.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+struct stPeriod
+{
+    sDate StartDate;
+    sDate EndDate;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year  to check? : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month to check? : ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day   to check? : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+bool IsDate1AfterDate2(sDate date1, sDate date2)
+{
+    return (!IsDate1BeforeDate2(date1, date2) && !IsDate1EqualsDate2(date1, date2));
+}
+
+enum enDateCompare
+{
+    Before = -1,
+    Equal = 0,
+    After = 1
+};
+
+enDateCompare CompareDates(sDate Date1, sDate Date2)
+{
+    if (IsDate1BeforeDate2(Date1, Date2))
+        return enDateCompare::Before;
+    if (IsDate1EqualsDate2(Date1, Date2))
+        return enDateCompare::Equal;
+    return enDateCompare::After;
+}
+
+bool IsLastDayInMonth(sDate Date)
+{
+    return Date.day == NumberOfDaysInMonth(Date.month, Date.year);
+}
+bool IsLastMonthInYear(sDate Date)
+{
+    return Date.month == 12;
+}
+
+sDate IncreaseDateByOneDay(sDate date)
+{
+    if (IsLastDayInMonth(date))
+    {
+        if (IsLastMonthInYear(date))
+        {
+            date.year++;
+            date.month = 1;
+            date.day = 1;
+        }
+        else
+        {
+            date.month++;
+            date.day = 1;
+        }
+    }
+    else
+    {
+        date.day++;
+    }
+    return date;
+}
+
+int GetDifferenceInDays(sDate date1, sDate date2, bool IncludeEndDay = false, bool swapFlagValue = false)
+{
+    if (IsDate1BeforeDate2(date2, date1))
+    {
+        return GetDifferenceInDays(date2, date1, IncludeEndDay, true);
+    }
+    int counter = 0;
+    while (IsDate1BeforeDate2(date1, date2))
+    {
+        date1 = IncreaseDateByOneDay(date1);
+        counter++;
+    }
+    counter += IncludeEndDay ? 1 : 0;
+    return swapFlagValue ? -counter : counter;
+}
+
+int PeriodLengthInDays(stPeriod Period, bool IncludeEndDate = false)
+{
+    return GetDifferenceInDays(Period.StartDate, Period.EndDate, IncludeEndDate);
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #59 :Write a program to read a Period and calculate period length in days.\n\n";
+    cout << "\tex     : Enter Period :\n";
+    cout << "\t       : Enter Start Date :\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 1\n";
+    cout << "\t\t\tEnter a day   to check? : 1\n";
+    cout << "\t       : Enter End Date   :\n";
+    cout << "\t\t\tEnter a year  to check? : 2022\n";
+    cout << "\t\t\tEnter a month to check? : 1\n";
+    cout << "\t\t\tEnter a day   to check? : 5\n";
+    cout << "\toutput  : Period Length: 4 days\n";
+    cout << "\t        : Period Length (Including End Date): 5 days\n";
+    cout << "\n\n-------------------------------------------------\n\n";
+    stPeriod Period;
+    cout << "\nEnter Period 1:\n";
+    Period.StartDate = ReadDate("Enter Start Date:");
+    Period.EndDate = ReadDate("Enter End Date:");
+    cout << "\nPeriod Length: " << PeriodLengthInDays(Period) << " days\n";
+    cout << "Period Length (Including End Date): " << PeriodLengthInDays(Period, true) << " days\n";
+
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+مثال جيد على أن بناء دوال صغيرة يختصر مسائل كاملة لاحقًا.
+## 🧩 Problem #60: Is Date Within Period
+### 📝 وصف المشكلة (Problem Description)
+فحص هل تاريخ معيّن يقع داخل فترة محددة.
+
+### 💡 الفكرة البرمجية (Logic Breakdown)
+التاريخ داخل الفترة إذا لم يكن قبل البداية ولم يكن بعد النهاية.
+
+### 💻 الكود المعتمد (Solution)
+<div dir="ltr">
+
+`cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int ReadPositiveNumberInRange(string message, int From, int To)
+{
+
+    int number;
+    cout << message;
+    cin >> number;
+
+    while (cin.fail() || number < From || number > To)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid Input! Please enter a valid number: ";
+        cin >> number;
+    }
+    return number;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+short NumberOfDaysInMonth(int month, int year)
+{
+    if (month < 1 || month > 12)
+    {
+        return 0;
+    }
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month == 2 ? (IsLeapYear(year) ? 29 : 28) : days[month - 1];
+}
+
+short NumberOfDaysFromTheBeginingOfTheYear(int day, int month, int year)
+{
+    short totalDays = 0;
+    for (int m = 1; m < month; m++)
+    {
+        totalDays += NumberOfDaysInMonth(m, year);
+    }
+    totalDays += day;
+    return totalDays;
+}
+
+struct sDate
+{
+    short day;
+    short month;
+    short year;
+};
+
+sDate ReadDate(string message)
+{
+    sDate date;
+    cout << message << "\n";
+    date.year = ReadPositiveNumberInRange("Enter a year : ", 1, 9999);
+    date.month = ReadPositiveNumberInRange("Enter a month: ", 1, 12);
+    date.day = ReadPositiveNumberInRange("Enter a day  : ", 1, NumberOfDaysInMonth(date.month, date.year));
+    return date;
+}
+
+bool IsDate1BeforeDate2(sDate date1, sDate date2)
+{
+    return (date1.year < date2.year) ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
+bool IsDate1EqualsDate2(sDate date1, sDate date2)
+{
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+}
+
+bool IsDate1AfterDate2(sDate date1, sDate date2)
+{
+    return (!IsDate1BeforeDate2(date1, date2) && !IsDate1EqualsDate2(date1, date2));
+}
+
+enum enDateCompare
+{
+    Before = -1,
+    Equal = 0,
+    After = 1
+};
+enDateCompare CompareDates(sDate Date1, sDate Date2)
+{
+    if (IsDate1BeforeDate2(Date1, Date2))
+        return enDateCompare::Before;
+    if (IsDate1EqualsDate2(Date1, Date2))
+        return enDateCompare::Equal;
+    return enDateCompare::After;
+}
+
+struct stPeriod
+{
+    sDate StartDate;
+    sDate EndDate;
+};
+
+stPeriod ReadPeriod()
+{
+    stPeriod period;
+    cout << "Enter Start Date:\n";
+    period.StartDate = ReadDate("");
+    cout << "Enter End Date:\n";
+    period.EndDate = ReadDate("");
+    return period;
+}
+
+bool isDateInPeriod(sDate date, stPeriod period)
+{
+    return !(IsDate1BeforeDate2(date, period.StartDate) || IsDate1AfterDate2(date, period.EndDate));
+}
+
+int main()
+{
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    cout << "Problem #60 :Write a program to read a Period and Date, then check if date is within this period or not?\n";
+    cout << "\tex     : Enter Period:\n";
+    cout << "\t\t: Enter Start Date:\n";
+    cout << "\t\t\tEnter a year : 2022\n";
+    cout << "\t\t\tEnter a month: 1\n";
+    cout << "\t\t\tEnter a day  : 1\n";
+    cout << "\t\t: Enter End Date:\n";
+    cout << "\t\t\tEnter a year : 2022\n";
+    cout << "\t\t\tEnter a month: 1\n";
+    cout << "\t\t\tEnter a day  : 10\n";
+    cout << "\t\t: Enter Date to check:\n";
+    cout << "\t\t\tEnter a year : 2022\n";
+    cout << "\t\t\tEnter a month: 1\n";
+    cout << "\t\t\tEnter a day  : 5\n";
+    cout << "\toutput  : Yes, the date is within the period.\n";
+    cout << "\n\n-------------------------------------------------\n";
+    stPeriod period = ReadPeriod();
+    sDate date = ReadDate("Enter Date to check:");
+    if (isDateInPeriod(date, period))
+    {
+        cout << "\nYes, the date is within the period.\n";
+    }
+    else
+    {
+        cout << "\nNo, the date is not within the period.\n";
+    }
+    cout << "\n-------------------------------------------------\n\n";
+    cout << "\n\n-------------------------------------------------------------------------------------------------\n\n";
+    return 0;
+}
+`
+
+</div>
+
+### 🛠️ ملاحظات هندسية (Engineering Notes)
+حل مختصر وقوي، ويستخدم في مسائل عدّ التداخل لاحقًا.
+
 </div>
 
