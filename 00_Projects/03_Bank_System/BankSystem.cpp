@@ -55,7 +55,7 @@ int ReadPositiveNumberInRange(int From, int To, string message)
     while (cin.fail() || number < From || number > To)
     {
         cin.clear();
-        cin.ignore(10000, '\n');
+        cin.ignore(10000, '\n'); 
         cout << "Invalid Input! Please enter a valid number: ";
         cin >> number;
     }
@@ -236,6 +236,11 @@ void AddClients(vector<stClient> &vClients)
         AddNewClient(vClients);
         cout << "\nClient data saved to file successfully, do you want to enter another client? (y/n) : ";
         cin >> AddAnotherClient;
+        while (tolower(AddAnotherClient) != 'y' && tolower(AddAnotherClient) != 'n')
+        {
+            cout << "Invalid input! Please enter (y for yes, n for no): ";
+            cin >> AddAnotherClient;
+        }
     } while (tolower(AddAnotherClient) == 'y');
 }
 
@@ -282,7 +287,7 @@ vector<stClient> SaveClientsDataToFile(vector<stClient> &vClients, string FileNa
     MyFile.open(FileName, ios::out);
     if (MyFile.is_open())
     {
-        for (stClient Client : vClients)
+        for (stClient & Client : vClients)
         {
             if (!Client.MarkForDelete)
             {
@@ -317,7 +322,12 @@ bool DeleteClientByAccountNumber(vector<stClient> &vClients, string AccountNumbe
         char Answer = 'n';
         cout << "\n\nAre you sure you want to delete this client? (y/n) : ";
         cin >> Answer;
-        if (Answer == 'y' || Answer == 'Y')
+        while (tolower(Answer) != 'y' && tolower(Answer) != 'n')
+        {
+            cout << "Invalid input! Please enter (y for yes, n for no): ";
+            cin >> Answer;
+        }
+        if (Answer == tolower('y'))
         {
             MarkClientForDeleteByAccountNumber(AccountNumber, vClients);
             SaveClientsDataToFile(vClients, ClientsFileName);
@@ -372,7 +382,12 @@ bool UpdateClientByAccountNumber(vector<stClient> &vClients, string AccountNumbe
         char Answer = 'n';
         cout << "\n\nAre you sure you want to update this client? (y/n) : ";
         cin >> Answer;
-        if (Answer == 'y' || Answer == 'Y')
+        while (tolower(Answer) != 'y' && tolower(Answer) != 'n')
+        {
+            cout << "Invalid input! Please enter (y for yes, n for no): ";
+            cin >> Answer;
+        }
+        if (Answer == tolower('y'))
         {
             for (stClient &C : vClients)
             {
@@ -383,7 +398,6 @@ bool UpdateClientByAccountNumber(vector<stClient> &vClients, string AccountNumbe
                 }
             }
             SaveClientsDataToFile(vClients, ClientsFileName);
-            vClients = LoadClientsDataFromFile(ClientsFileName);
             cout << "\n\nClient with Account Number [" << AccountNumber << "] is Updated successfully\n";
             return true;
         }
@@ -489,7 +503,7 @@ void ShowTotalBalances(vector<stClient> &vClients)
     if (vClients.size() == 0)
         cout << "\t\t\t\tNo Clients Available In the System!";
     else
-        for (stClient Client : vClients)
+        for (stClient &Client : vClients)
         {
             PrintClientRecordBalanceLine(Client);
             TotalBalances += Client.AccountBalance;
