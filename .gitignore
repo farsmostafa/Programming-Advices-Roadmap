@@ -1,5 +1,6 @@
 # Visual Studio Temp Files
 .vs/
+.vscode/
 Debug/
 Release/
 x64/
