@@ -3,6 +3,8 @@
 This repository documents my intense journey through the **Programming Advices Roadmap**.
 My goal is to transition from Front-end development to becoming a specialized **Full-Stack Developer** by mastering Software Engineering foundations, Backend technologies, and System Design.
 
+> 📋 **Agent guide:** See [ROADMAP_STATUS.md](ROADMAP_STATUS.md) for course progress, content types, and conventions.
+
 ## 🎯 The Mission
 
 To evolve from a Front-end focused developer into a robust **Backend Engineer** (and eventually Full-Stack)
@@ -10,31 +12,52 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 
 ## 🛣 Roadmap Phases
 
-- [x] **Phase 1: Foundation (C++ & Algorithms)** - Building the "Logic Muscle". _(Phase Completed 🏆)_
-- [ ] **Phase 2: Advanced Backend Foundation** - Mastery of OOP, Databases (SQL/T-SQL), and Data Structures. _(Current Phase ⏳)_
+- [x] **Phase 1: Foundation (C++ & Algorithms)** - Building the "Logic Muscle". _(Completed 🏆)_
+- [ ] **Phase 2: Advanced Backend Foundation** - OOP, Foundations L2, Databases, Data Structures. _(Current Phase ⏳)_
 - [ ] **Phase 3: C# & .NET Mastery** - Building enterprise-level desktop and web applications.
 - [ ] **Phase 4: Full-Stack Specialization** - Bridging the gap between Frontend and Backend with RESTful APIs.
 
-## 📂 Project Archive (All Foundational Courses Completed ✅)
+## 📂 Course Progress
 
-### 🧩 Completed Courses:
-- ✅ `01 - Programming Foundations`: Building the mindset and understanding how computers work.
-- ✅ `02 - Introduction to Programming`: First steps into the world of logic and code.
-- ✅ `03 - C++ Level 1`: Deep dive into syntax, control flow, and functions.
-- ✅ `04 - Algorithms Level 1`: Foundations of problem-solving and algorithmic thinking.
-- ✅ `05 - Algorithms Level 2`: Complex logic, optimizations, and mathematical problem solving.
-- ✅ `06 - C++ Level 2`: Advanced language features, Pointers, Dynamic Memory Allocation, Vectors, Exception Handling, and File CRUD Operations.
-- ✅ `07 - Algorithms & Problem Solving Level 3`: 2D Arrays, String Manipulation, and Flat-File databases.
-- ✅ `08 - Object-Oriented Programming (OOP)`: Advanced structures, encapsulation, inheritance, and polymorphism.
-- ⏳ `09 - Algorithms & Problem Solving Level 4`: _(Up Next!)_
-- ⏳ `10 - Foundations Level 2`: _(Up Next!)_
+### ✅ Completed (01–08)
 
-### 🏗️ Notable Projects:
-- 🎮 **Stone Paper Scissors**: First practical application of programming logic.
-- 🔢 **Math Game**: A project to test quick thinking and arithmetic operations.
-- 🏦 **Bank System v1.0**: A complete banking system managing client records and financial transactions using Flat-File databases (Full CRUD operations).
+- ✅ `01 - Programming Foundations Level 1` — Programming mindset and how computers work.
+- ✅ `02 - Algorithms & Problem-Solving Level 1` — First steps in algorithmic thinking and problem solving.
+- ✅ `03 - Introduction to Programming with C++ Level 1` — Syntax, control flow, functions, and structs.
+- ✅ `04 - Algorithms Level 1 (Solutions)` — Solutions and explanations for Level 1 problems.
+- ✅ `05 - Algorithms & Problem-Solving Level 2` — Advanced algorithms, arrays, and optimizations.
+- ✅ `06 - Introduction to Programming Using C++ Level 2` — Debugging, pointers, memory, vectors, and file operations.
+- ✅ `07 - Algorithms & Problem Solving Level 3` — 2D matrices, string manipulation, and flat-file databases.
+- ✅ `08 - Algorithms & Problem Solving Level 4` — Date/time algorithms, periods, and validation.
 
-_(Folders will be updated dynamically as I progress through the 24+ courses)_
+### ⏳ In Progress
+
+- ⏳ `09 - Foundations Level 2` — Networks, servers, protocols, and core CS foundations.
+- ⏳ `10 - OOP as it Should Be (Concepts)` — Object-oriented programming concepts and practical application.
+
+### 🔒 Not Started (11–24)
+
+- 🔒 `11 - OOP as it Should Be (Applications)`
+- 🔒 `12 - Data Structures - Level 1`
+- 🔒 `13 - Algorithms & Problem Solving Level 5`
+- 🔒 `14 - C# - Level 1`
+- 🔒 `15 - Database Level 1 - SQL (Concepts and Practice)`
+- 🔒 `16 - OOP As It Should Be In C#`
+- 🔒 `17 - Database - SQL (Projects & Practice)`
+- 🔒 `18 - C# & Database Connectivity (ADO.NET)`
+- 🔒 `19 - Full Real Project - DVLD`
+- 🔒 `20 - C# Programming Level 2`
+- 🔒 `21 - Database Level 2 - Concepts & T-SQL`
+- 🔒 `22 - Data Structures Level 2 in C#`
+- 🔒 `23 - Algorithms Level 6`
+- 🔒 `24 - Windows Services`
+
+### 🏗️ Notable Projects
+
+- 🎮 **Stone Paper Scissors** — First practical application of programming logic.
+- 🔢 **Math Game** — Quick thinking and arithmetic operations.
+- 🏦 **Bank System v1.0** — Client records and financial transactions with flat-file databases (Full CRUD).
+- 🏧 **ATM System** — Client authentication, quick/normal withdraw, deposit, and balance check.
 
 ## 🛠 Tech Stack & Tools
 
