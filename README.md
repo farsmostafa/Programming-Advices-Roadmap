@@ -25,7 +25,9 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 - ✅ `05 - Algorithms Level 2`: Complex logic, optimizations, and mathematical problem solving.
 - ✅ `06 - C++ Level 2`: Advanced language features, Pointers, Dynamic Memory Allocation, Vectors, Exception Handling, and File CRUD Operations.
 - ✅ `07 - Algorithms & Problem Solving Level 3`: 2D Arrays, String Manipulation, and Flat-File databases.
-- ⏳ `08 - Object-Oriented Programming (OOP)`: _(Up Next!)_
+- ✅ `08 - Object-Oriented Programming (OOP)`: Advanced structures, encapsulation, inheritance, and polymorphism.
+- ⏳ `09 - Algorithms & Problem Solving Level 4`: _(Up Next!)_
+- ⏳ `10 - Foundations Level 2`: _(Up Next!)_
 
 ### 🏗️ Notable Projects:
 - 🎮 **Stone Paper Scissors**: First practical application of programming logic.
