@@ -13,13 +13,13 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 ## 🛣 Roadmap Phases
 
 - [x] **Phase 1: Foundation (C++ & Algorithms)** - Building the "Logic Muscle". _(Completed 🏆)_
-- [ ] **Phase 2: Advanced Backend Foundation** - OOP, Foundations L2, Databases, Data Structures. _(Current Phase ⏳)_
+- [x] **Phase 2: Advanced Backend Foundation** - OOP, Foundations L2, Databases, Data Structures. _(Completed 🏆)_
 - [ ] **Phase 3: C# & .NET Mastery** - Building enterprise-level desktop and web applications.
 - [ ] **Phase 4: Full-Stack Specialization** - Bridging the gap between Frontend and Backend with RESTful APIs.
 
 ## 📂 Course Progress
 
-### ✅ Completed (01–08)
+### ✅ Completed (01–13)
 
 - ✅ `01 - Programming Foundations Level 1` — Programming mindset and how computers work.
 - ✅ `02 - Algorithms & Problem-Solving Level 1` — First steps in algorithmic thinking and problem solving.
@@ -29,18 +29,18 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 - ✅ `06 - Introduction to Programming Using C++ Level 2` — Debugging, pointers, memory, vectors, and file operations.
 - ✅ `07 - Algorithms & Problem Solving Level 3` — 2D matrices, string manipulation, and flat-file databases.
 - ✅ `08 - Algorithms & Problem Solving Level 4` — Date/time algorithms, periods, and validation.
+- ✅ `09 - Foundations Level 2` — Networks, servers, protocols, and core CS foundations.
+- ✅ `10 - OOP as it Should Be (Concepts)` — Object-oriented programming concepts and practical application.
+- ✅ `11 - OOP as it Should Be (Applications)`
+- ✅ `12 - Data Structures - Level 1`
+- ✅ `13 - Algorithms & Problem Solving Level 5`
 
 ### ⏳ In Progress
 
-- ⏳ `09 - Foundations Level 2` — Networks, servers, protocols, and core CS foundations.
-- ⏳ `10 - OOP as it Should Be (Concepts)` — Object-oriented programming concepts and practical application.
+- ⏳ `14 - C# - Level 1` — Active focus 🔥
 
-### 🔒 Not Started (11–24)
+### 🔒 Not Started (15–24)
 
-- 🔒 `11 - OOP as it Should Be (Applications)`
-- 🔒 `12 - Data Structures - Level 1`
-- 🔒 `13 - Algorithms & Problem Solving Level 5`
-- 🔒 `14 - C# - Level 1`
 - 🔒 `15 - Database Level 1 - SQL (Concepts and Practice)`
 - 🔒 `16 - OOP As It Should Be In C#`
 - 🔒 `17 - Database - SQL (Projects & Practice)`
@@ -58,6 +58,7 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 - 🔢 **Math Game** — Quick thinking and arithmetic operations.
 - 🏦 **Bank System v1.0** — Client records and financial transactions with flat-file databases (Full CRUD).
 - 🏧 **ATM System** — Client authentication, quick/normal withdraw, deposit, and balance check.
+- 🏦 **Bank System OOP Advanced** — Client management, account handling, transactions, and Object-Oriented design practice. _README in progress._
 
 ## 🛠 Tech Stack & Tools
 

@@ -1,48 +1,128 @@
-<div dir="rtl">
+# Bank System Project
 
-# نظام إدارة البنك (Bank System - الإصدار المكتمل)
+A practical banking management application built with **C++** and designed for a **command-line interface (CLI)**. This project was developed as part of a learning path focused on object-oriented programming, file-based data persistence, and real-world business logic implementation.
 
-يُعد هذا المشروع تطبيقاً برمجياً متكاملاً يعمل عبر واجهة سطر الأوامر (CLI)، تم تطويره بالكامل باستخدام لغة **C++**. يهدف النظام إلى إدارة بيانات عملاء البنك والعمليات المالية بكفاءة عالية، ويُعتبر تتويجاً عملياً لدمج مفاهيم البرمجة المتقدمة، بما في ذلك تصميم الخوارزميات، توظيف هياكل البيانات (Data Structures)، إدارة الذاكرة، والتعامل مع الملفات النصية كقاعدة بيانات محلية (Flat-File Database).
-
----
-
-## المميزات المكتملة
-
-### أولاً: إدارة السجلات الأساسية (Client Management Core)
-
-تم بناء المحرك الأساسي ليدعم عمليات (CRUD) المتكاملة وفقاً لأفضل الممارسات الهندسية:
-
-- **استعراض قائمة العملاء (Read):** جلب كافة بيانات العملاء من قاعدة البيانات وعرضها في جدول ديناميكي منسق بعناية باستخدام مكتبة `<iomanip>`.
-- **إضافة عميل جديد (Create):** تطبيق نظام تحقق صارم لمنع تكرار "رقم الحساب" (Unique Account Validation)، والاعتماد على تقنية الإضافة المزدوجة والمباشرة في الذاكرة والملف لتحقيق تعقيد زمني مثالي (O(1) Optimization).
-- **حذف سجل عميل (Delete):** تطبيق خوارزمية الحذف الآمن باستخدام وسم السجلات (Soft Delete / Tombstone Pattern)، يليه عملية إعادة كتابة شاملة للملف (Overwrite) لضمان استقرار الفهارس.
-- **تحديث بيانات العميل (Update):** توفير واجهة لتعديل بيانات العميل بشكل فردي مع مزامنة التغييرات مباشرة.
-- **البحث المتقدم (Find):** محرك بحث يعتمد على خوارزمية البحث الخطي (Linear Search) للوصول السريع إلى أي عميل.
-
-### ثانياً: العمليات المالية (Transactions Module)
-
-تم دمج قسم مالي مستقل ومعزول معمارياً لإدارة أرصدة العملاء:
-
-- **واجهة المعاملات (Transactions Menu):** بناء قائمة فرعية تتيح التنقل الآمن والعودة للقائمة الرئيسية دون استهلاك إضافي للذاكرة.
-- **الإيداع والسحب (Deposit & Withdraw):** نظام دقيق لتعديل الأرصدة مبني على دالة مركزية موحدة لتجنب التكرار (DRY Principle).
-- **تأمين السحب (Balance Validation):** طبقة حماية تمنع سحب مبالغ تتجاوز الرصيد المتاح للعميل.
-- **إجمالي الأرصدة (Total Balances):** تقرير مالي شامل يقوم بحساب وعرض المجموع الكلي لأموال المودعين بأسلوب محسن للذاكرة عبر التمرير بالمرجع (Pass by Reference).
+The system simulates a bank environment where users can manage clients, process financial transactions, and maintain records using local text files as a lightweight database.
 
 ---
 
-## التقنيات والتصميم المعماري
+## Project Overview
 
-- **لغة البرمجة:** `C++`
-- **هياكل البيانات:**
-- و `struct` : لبناء كائن موحد يمثل بطاقة بيانات العميل.
-- و `std::vector` : لإدارة مجموعة العملاء ديناميكياً داخل الذاكرة العشوائية (RAM).
-- **قاعدة البيانات:** ملف نصي `Clients.txt` يمثل قاعدة البيانات (Flat-File) مع محرك تجزئة نصي (Parsing Engine) يعتمد على فاصل مخصص `"#//#"`.
-- **الاستقرار والأداء (Optimization & Safety):**
-- و **منع طفح الذاكرة (Stack-Safe):** استبدال الاستدعاء الذاتي (Mutual Recursion) بحلقات التكرار `while loop` لإدارة القوائم والتنقل.
-- و **إدارة الذاكرة:** تمرير المتجهات باستخدام المراجع `&` (Pass by Reference) لمنع النسخ العشوائي وتقليل استهلاك الـ RAM.
-- و **تأمين الإدخال:** طبقة حماية لمعالجة أخطاء إدخال المستخدم (Input Validation) لمنع انهيار البرنامج.
+This project demonstrates how to build a complete business application using core programming concepts, including:
+
+- class-based design
+- encapsulation
+- inheritance
+- file handling
+- validation logic
+- data storage and retrieval
+- transaction processing
+- clean console-based user interaction
+
+It is designed to reflect a realistic banking workflow while remaining beginner-friendly and easy to understand.
 
 ---
 
-> **ملاحظة المطور:** "يمثل هذا المشروع تطبيقاً كاملاً لدورة حياة البرمجيات، بداية من إدارة البيانات الخام وحتى إجراء المعاملات المالية، مع التركيز التام على نظافة الكود (Clean Code)، كفاءة الأداء، وتأمين النظام ضد الثغرات المعمارية."
+## Features
 
-</div>
+### Client Management
+
+- Add new customers
+- Delete existing clients
+- Update client information
+- View all clients
+- Search for a specific client
+- Validate unique account numbers
+
+### Banking Operations
+
+- Deposit money
+- Withdraw money
+- Check account balance
+- View total balances
+- Transfer funds between clients
+- Maintain transaction logs
+
+### User and Access Control
+
+- User login and registration flow
+- Permission-based access handling
+- User management screen
+- Login activity tracking
+
+### Currency Support
+
+- View supported currencies
+- Update exchange rates
+- Calculate currency conversion values
+
+---
+
+## Project Structure
+
+The project is organized around a modular architecture:
+
+- `Main.cpp` — entry point of the application
+- `Core/` — core business classes such as users and clients
+- `Screens/` — menu and screen management classes
+- `Helpers/` — utility and validation helpers
+- `Data/` — flat-file data storage
+- `Global/` — shared globals and application state
+
+This structure keeps the code easier to read, maintain, and extend.
+
+---
+
+## Core Classes
+
+The application is built around key class models, including:
+
+- `clsPerson` — base class for personal information
+- `clsUser` — user authentication and permissions
+- `clsBankClient` — customer account data and banking logic
+- screen classes for each operational module
+- helper classes for formatting, validation, and dates
+
+This is a good example of OOP design in a real-world business system.
+
+---
+
+## Data Storage
+
+The project uses local text files instead of a database system to simulate persistent storage. Records are stored in files such as:
+
+- `Users.txt`
+- `Clients.txt`
+- `TransferLog.txt`
+
+This approach is useful for learning how applications persist data without relying on a full database engine.
+
+---
+
+## Technologies Used
+
+- **Language:** C++
+- **Concepts:** OOP, file I/O, validation, transaction handling
+- **Libraries:** standard C++ libraries and custom helper utilities
+- **Environment:** console application
+
+---
+
+## Why This Project Matters
+
+This project is valuable because it combines multiple software engineering ideas into one practical system:
+
+- object-oriented design
+- maintainable class separation
+- interactive console interfaces
+- file-based persistence
+- business rules and validation
+- transaction safety logic
+
+It is an excellent example of how a real-world banking app can be built step by step using structured programming and OOP principles.
+
+---
+
+## Developer Note
+
+This project represents a solid learning milestone in building larger and more realistic applications. It demonstrates how a simple console program can evolve into a structured business system with proper separation between logic, screens, data, and utilities.
