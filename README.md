@@ -56,6 +56,7 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 
 - 🎮 **Stone Paper Scissors** — First practical application of programming logic.
 - 🔢 **Math Game** — Quick thinking and arithmetic operations.
+- 🎮 **Tic-Tac-Toe** — C# Windows Forms game with single-player and multiplayer modes, rounds, target wins, and score tracking.
 - 🏦 **Bank System v1.0** — Client records and financial transactions with flat-file databases (Full CRUD).
 - 🏧 **ATM System** — Client authentication, quick/normal withdraw, deposit, and balance check.
 - 🏦 **Bank System OOP Advanced** — Client management, account handling, transactions, and Object-Oriented design practice. _README in progress._
