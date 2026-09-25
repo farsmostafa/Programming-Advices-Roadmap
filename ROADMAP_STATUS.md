@@ -1,16 +1,19 @@
 # Roadmap Status Guide
 
 > **For Agents:** Read this file at the start of every session. Do NOT re-scan the entire repo.
-> **Last updated:** 2026-07-29 (folder structure v2)
+> **Last updated:** 2026-09-25 (courses 14–18 status update)
 
 ---
 
 ## Current Focus
 
-| # | Course | Type | Repo Folder | Guide | Notes |
-|---|--------|------|-------------|-------|-------|
-| 09 | Foundations Level 2 | Theory | `09_Foundations_Level_2/` | not created | 4 md files done |
-| 10 | OOP as it Should Be (Concepts) | Mixed | `10_OOP_Concepts/` | ✅ Phase B | 5/43 videos — next: Properties (06) |
+| #   | Course                             | Type            | Repo Folder                                      | Guide       | Notes                                              |
+| --- | ---------------------------------- | --------------- | ------------------------------------------------ | ----------- | -------------------------------------------------- |
+| 14  | C# - Level 1                       | Mixed           | `14_C#_Level_1/`                                 | not created | Completed practical projects and WinForms training |
+| 15  | Database Level 1 - SQL             | Theory/Practice | `15_Database_Level_1_SQL_Concepts_and_Practice/` | not created | SQL lessons and database backups                   |
+| 16  | OOP As It Should Be In C#          | Mixed           | `16_OOP_As_It_Should_Be_In_C#/`                  | not created | OOP training and Calculator project                |
+| 17  | Database - SQL Projects & Practice | Practice        | `17_Database_SQL_Projects_and_Practice/`         | not created | Queries, ERD/schema projects, and database backups |
+| 18  | C# Database Connectivity (ADO.NET) | Practice        | `18_C#_Database_Connectivity_ADO.NET/`           | not created | Current focus: ADO.NET and ContactsDB              |
 
 ---
 
@@ -32,20 +35,22 @@ Read ROADMAP_STATUS.md + _COURSE_GUIDE.md (if exists) and continue from [course/
 
 **Output:**
 
-| What | Created in Phase A? |
-|------|---------------------|
-| Course folder `XX_Course_Name/` | Yes |
-| `_COURSE_GUIDE.md` | Yes |
-| Empty subfolders (`practice/`, `projects/`, `problems/`) | Yes — per course type |
-| Topic md files, cpp files, problem READMEs | **No** — create-on-demand in Phase B |
+| What                                                     | Created in Phase A?                  |
+| -------------------------------------------------------- | ------------------------------------ |
+| Course folder `XX_Course_Name/`                          | Yes                                  |
+| `_COURSE_GUIDE.md`                                       | Yes                                  |
+| Empty subfolders (`practice/`, `projects/`, `problems/`) | Yes — per course type                |
+| Topic md files, cpp files, problem READMEs               | **No** — create-on-demand in Phase B |
 
 The guide must contain:
+
 1. **Topic Groups** — related videos grouped by subject
 2. **File Map** — planned file paths (not created yet)
 3. **Progress Table** — each video: `[ ]` pending / `[x]` done
 4. **Content Type** per video: `theory` / `practice` / `project-req` / `project-sol` / `problem` / `skip`
 
 **Rules:**
+
 - Show the topic plan to the user and wait for approval before Phase B
 - **Create-on-demand:** do NOT create empty md/cpp content files upfront
 - `_COURSE_GUIDE.md` is the skeleton; real content files are created when content arrives
@@ -56,6 +61,7 @@ The guide must contain:
 **Input:** Content for one video (transcript/notes).
 
 **Agent:**
+
 1. Read `_COURSE_GUIDE.md` → find target file from File Map
 2. **Create** the md file on first use, or **append** a section if multiple videos share one topic
 3. Mark video `[x]` in the guide
@@ -69,28 +75,34 @@ The guide must contain:
 # [Topic Title]
 
 ## 📝 الدرس: [Video Title]
+
 <!-- Video NN: [filename] -->
 
 [Structured Arabic explanation from transcript]
 
 ### 💡 Key Concepts
+
 - ...
 
 ### 📌 Examples
+
 ...
 ```
 
 ### Phase B — Project Videos (Requirements → Solution → Compare)
 
 **Step 1 — Requirements video (`project-req`):**
+
 - Write `projects/ProjectName/Requirements.md` only
 - Mark video done in guide
 - **Stop and tell user:** implement on your own, then send Solution video + doctor code (+ your code if you want comparison)
 
 **Step 2 — User implements independently**
+
 - Agent does NOT write `My_Solution.cpp` — that is the user's work
 
 **Step 3 — Solution video (`project-sol`):**
+
 - **Input:** Solution video content + `Doctor_Solution.cpp`
 - **Optional input:** `My_Solution.cpp` (user's solution)
 - **Agent writes:**
@@ -101,12 +113,14 @@ The guide must contain:
 ```markdown
 ## 🔍 مقارنة: حلي vs حل الدكتور
 
-| النقطة | حلي | الدكتور | ملاحظة |
-|--------|-----|---------|--------|
-| Structure | ... | ... | ... |
+| النقطة    | حلي | الدكتور | ملاحظة |
+| --------- | --- | ------- | ------ |
+| Structure | ... | ...     | ...    |
 
 ### ✅ اللي عملته صح
+
 ### ⚠️ اللي يختلف (مش غلط بالضرورة)
+
 ### 💡 اللي ممكن تتعلمه من حل الدكتور
 ```
 
@@ -115,20 +129,21 @@ The guide must contain:
 **When:** User applies along with a theory video (e.g. Course 10 videos 02, 08).
 
 **Agent:**
+
 - Save user's or doctor's practice code in `practice/#NN_Topic_Task.cpp`
 - Link the file in the corresponding theory md section
 - Agent does NOT create practice files until user sends code or asks to save it
 
 ### Topic Grouping Rules
 
-| Rule | Example |
-|------|---------|
-| Consecutive videos on same topic → one md file | Videos 02–05 → `02_Classes_And_Objects.md` |
-| Inline exercise with video → `practice/` | Video 02 → `practice/#02_ClassesAndObjects_Task.cpp` |
-| Requirements + Solution → `projects/` | Videos 11–12 → `projects/Calculator/` |
-| End-of-course capstone project → `00_Projects/` | DVLD, future large projects |
-| Homework solution → same topic or project folder | Video 36 → nested classes topic or project |
-| Closing/thank you video → mark `skip`, no file | Video 43 → `[x]` in guide only |
+| Rule                                             | Example                                              |
+| ------------------------------------------------ | ---------------------------------------------------- |
+| Consecutive videos on same topic → one md file   | Videos 02–05 → `02_Classes_And_Objects.md`           |
+| Inline exercise with video → `practice/`         | Video 02 → `practice/#02_ClassesAndObjects_Task.cpp` |
+| Requirements + Solution → `projects/`            | Videos 11–12 → `projects/Calculator/`                |
+| End-of-course capstone project → `00_Projects/`  | DVLD, future large projects                          |
+| Homework solution → same topic or project folder | Video 36 → nested classes topic or project           |
+| Closing/thank you video → mark `skip`, no file   | Video 43 → `[x]` in guide only                       |
 
 ### File Naming
 
@@ -144,42 +159,42 @@ The guide must contain:
 
 ### ✅ Completed (01–08)
 
-| # | Official Name | Summary | Repo Folder |
-|---|--------------|---------|-------------|
-| 01 | Programming Foundations Level 1 | Programming mindset and how computers work | — |
-| 02 | Algorithms & Problem-Solving Level 1 | First steps in algorithmic thinking and problem solving | — |
-| 03 | Introduction to Programming with C++ Level 1 | Syntax, control flow, functions, structs | `03 _Introduction_to_Programming_with_CPP_Level_1/` |
-| 04 | Algorithms Level 1 (Solutions) | Solutions and explanations for Level 1 problems | — |
-| 05 | Algorithms & Problem-Solving Level 2 | Advanced algorithms, arrays, optimizations | `05_Algorithms_Problem_Solving_Level_2/` |
-| 06 | Introduction to Programming Using C++ Level 2 | Debugging, pointers, memory, vectors, files | `06_Introduction_to_Programming_Using_CPP_Level_2/` |
-| 07 | Algorithms & Problem Solving Level 3 | 2D matrices, strings, flat-file databases | `07_Algorithms_and_Problem_Solving_Level_3/` |
-| 08 | Algorithms & Problem Solving Level 4 | Date/time algorithms, periods, validation | `08_Algorithms_and_Problem_Solving_Level_4/` |
+| #   | Official Name                                 | Summary                                                            | Repo Folder                                         |
+| --- | --------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------- |
+| 01  | Programming Foundations Level 1               | Programming mindset and how computers work                         | —                                                   |
+| 02  | Algorithms & Problem-Solving Level 1          | First steps in algorithmic thinking and problem solving            | —                                                   |
+| 03  | Introduction to Programming with C++ Level 1  | Syntax, control flow, functions, structs                           | `03 _Introduction_to_Programming_with_CPP_Level_1/` |
+| 04  | Algorithms Level 1 (Solutions)                | Solutions and explanations for Level 1 problems                    | —                                                   |
+| 05  | Algorithms & Problem-Solving Level 2          | Advanced algorithms, arrays, optimizations                         | `05_Algorithms_Problem_Solving_Level_2/`            |
+| 06  | Introduction to Programming Using C++ Level 2 | Debugging, pointers, memory, vectors, files                        | `06_Introduction_to_Programming_Using_CPP_Level_2/` |
+| 07  | Algorithms & Problem Solving Level 3          | 2D matrices, strings, flat-file databases                          | `07_Algorithms_and_Problem_Solving_Level_3/`        |
+| 08  | Algorithms & Problem Solving Level 4          | Date/time algorithms, periods, validation                          | `08_Algorithms_and_Problem_Solving_Level_4/`        |
+| 09  | Foundations Level 2                           | Networks, servers, protocols, and core CS foundations              | `09_Foundations_Level_2/`                           |
+| 10  | OOP as it Should Be (Concepts)                | Object-oriented programming concepts and practical application     | `10_OOP_Concepts/`                                  |
+| 11  | OOP as it Should Be (Applications)            | Applied OOP projects and reusable class design                     | —                                                   |
+| 12  | Data Structures - Level 1                     | Core data structures and implementation practice                   | `12_Data_Structures_Level_1/`                       |
+| 13  | Algorithms & Problem Solving Level 5          | Advanced data structures, algorithms, and problem-solving projects | `13_Algorithms_Problem_Solving_Level_5/`            |
+| 14  | C# - Level 1                                  | C# fundamentals, WinForms, and practical projects                  | `14_C#_Level_1/`                                    |
+| 15  | Database Level 1 - SQL                        | SQL fundamentals, queries, joins, views, and constraints           | `15_Database_Level_1_SQL_Concepts_and_Practice/`    |
+| 16  | OOP As It Should Be In C#                     | Object-oriented C# practice and class-based projects               | `16_OOP_As_It_Should_Be_In_C#/`                     |
+| 17  | Database - SQL Projects & Practice            | Queries, ERD/schema projects, and database backups                 | `17_Database_SQL_Projects_and_Practice/`            |
 
-### ⏳ In Progress (09–10)
+### ⏳ In Progress (18)
 
-| # | Official Name | Type |
-|---|--------------|------|
-| 09 | Foundations Level 2 | Theory |
-| 10 | OOP as it Should Be (Concepts) | Mixed |
+| #   | Official Name                        | Type     |
+| --- | ------------------------------------ | -------- |
+| 18  | C# & Database Connectivity (ADO.NET) | Practice |
 
-### 🔒 Not Started (11–24)
+### 🔒 Not Started (19–24)
 
-| # | Official Name |
-|---|--------------|
-| 11 | OOP as it Should Be (Applications) |
-| 12 | Data Structures - Level 1 |
-| 13 | Algorithms & Problem Solving Level 5 |
-| 14 | C# - Level 1 |
-| 15 | Database Level 1 - SQL (Concepts and Practice) |
-| 16 | OOP As It Should Be In C# |
-| 17 | Database - SQL (Projects & Practice) |
-| 18 | C# & Database Connectivity (ADO.NET) |
-| 19 | Full Real Project - DVLD |
-| 20 | C# Programming Level 2 |
-| 21 | Database Level 2 - Concepts & T-SQL |
-| 22 | Data Structures Level 2 in C# |
-| 23 | Algorithms Level 6 |
-| 24 | Windows Services |
+| #   | Official Name                       |
+| --- | ----------------------------------- |
+| 19  | Full Real Project - DVLD            |
+| 20  | C# Programming Level 2              |
+| 21  | Database Level 2 - Concepts & T-SQL |
+| 22  | Data Structures Level 2 in C#       |
+| 23  | Algorithms Level 6                  |
+| 24  | Windows Services                    |
 
 ---
 
@@ -188,6 +203,7 @@ The guide must contain:
 ### Type 1: Problems-Only (e.g. 05, 07, 08)
 
 **Phase A creates:**
+
 ```
 08_Algorithms_Level_4/
 ├── _COURSE_GUIDE.md
@@ -195,6 +211,7 @@ The guide must contain:
 ```
 
 **Phase B creates (one folder per problem):**
+
 ```
 08_Algorithms_Level_4/
 ├── _COURSE_GUIDE.md
@@ -209,18 +226,22 @@ The guide must contain:
 ```
 
 **Per-problem README.md format:**
+
 ```markdown
 <div dir="rtl">
 
 # 🧩 Problem #01: Number To Text
 
 ### 📝 وصف المشكلة (Problem Description)
+
 ...
 
 ### 💡 الفكرة البرمجية (Logic Breakdown)
+
 ...
 
 ### 💻 الكود
+
 See `#01_NumberToText.cpp`
 ```
 
@@ -233,6 +254,7 @@ See `#01_NumberToText.cpp`
 ### Type 2: Theory-Only (e.g. 09)
 
 **Phase A creates:**
+
 ```
 09_Foundations_Level_2/
 ├── _COURSE_GUIDE.md
@@ -240,6 +262,7 @@ See `#01_NumberToText.cpp`
 ```
 
 **Phase B creates topic md files on demand:**
+
 ```
 09_Foundations_Level_2/
 ├── _COURSE_GUIDE.md
@@ -249,6 +272,7 @@ See `#01_NumberToText.cpp`
 ```
 
 **Format rules:**
+
 - `<div dir="rtl">` wrapper
 - Headings: `# الفصل` / `## 📝 الدرس`
 - Tables, ASCII diagrams, practical examples
@@ -262,6 +286,7 @@ See `#01_NumberToText.cpp`
 ### Type 3: Mixed — Theory + Practical (e.g. 06, 10)
 
 **Phase A creates:**
+
 ```
 10_OOP_Concepts/
 ├── _COURSE_GUIDE.md
@@ -270,6 +295,7 @@ See `#01_NumberToText.cpp`
 ```
 
 **Phase B fills on demand:**
+
 ```
 10_OOP_Concepts/
 ├── _COURSE_GUIDE.md
@@ -286,14 +312,15 @@ See `#01_NumberToText.cpp`
         └── Solution_Notes.md
 ```
 
-| Subfolder | Purpose | Examples |
-|-----------|---------|----------|
-| `practice/` | Small exercises done alongside a theory video | Video 02 task, Video 08 task |
+| Subfolder   | Purpose                                           | Examples                                    |
+| ----------- | ------------------------------------------------- | ------------------------------------------- |
+| `practice/` | Small exercises done alongside a theory video     | Video 02 task, Video 08 task                |
 | `projects/` | Course projects with Requirements/Solution videos | Calculator, String Library, Person Exercise |
 
 **Theory:** same format as Phase B theory above.
 
 **Workflow:**
+
 1. Phase A → create folder + `practice/` + `projects/` + `_COURSE_GUIDE.md`
 2. Theory videos → create/update md on demand
 3. Practice videos → save cpp in `practice/` when user sends code
@@ -304,18 +331,20 @@ See `#01_NumberToText.cpp`
 
 ## Project Placement Rules
 
-| Type | Location | When | Examples |
-|------|----------|------|----------|
-| Inline practice | `XX_Course/practice/` | Exercise during a theory video | `#02_ClassesAndObjects_Task.cpp` |
-| Course project | `XX_Course/projects/ProjectName/` | Project taught inside course videos (Req/Sol) | Calculator, String Library, Person Exercise |
-| Portfolio / capstone | `00_Projects/XX_Name/` | Large end-of-roadmap project, outside course folder | Bank System, ATM, DVLD |
+| Type                 | Location                          | When                                                | Examples                                    |
+| -------------------- | --------------------------------- | --------------------------------------------------- | ------------------------------------------- |
+| Inline practice      | `XX_Course/practice/`             | Exercise during a theory video                      | `#02_ClassesAndObjects_Task.cpp`            |
+| Course project       | `XX_Course/projects/ProjectName/` | Project taught inside course videos (Req/Sol)       | Calculator, String Library, Person Exercise |
+| Portfolio / capstone | `00_Projects/XX_Name/`            | Large end-of-roadmap project, outside course folder | Bank System, ATM, DVLD                      |
 
 **Decision tree:**
+
 1. Small exercise while watching a lesson? → `practice/`
 2. Formal project with Requirements + Solution videos inside a course? → `projects/` inside course folder
 3. Large standalone capstone at end of roadmap stage? → `00_Projects/` (NOT inside course folder)
 
 **Course project template (`projects/`):**
+
 ```
 XX_Course/projects/ProjectName/
 ├── Requirements.md
@@ -325,6 +354,7 @@ XX_Course/projects/ProjectName/
 ```
 
 **Portfolio project template (`00_Projects/`):**
+
 ```
 00_Projects/XX_ProjectName/
 ├── README.md
@@ -336,22 +366,22 @@ XX_Course/projects/ProjectName/
 
 ## Agent Conventions
 
-| Rule | Value |
-|------|-------|
-| Language | Arabic (RTL) for explanations, LTR for code |
-| Commit style | `docs(courseXX): ...` / `feat(project): ...` / `fix(...): ...` |
-| Folder naming | `XX_Course_Name` or `00_Projects/XX_Name` |
-| Session start | "Read ROADMAP_STATUS.md + _COURSE_GUIDE.md and continue from [course/lesson]" |
-| After commit | Update Current Focus notes (md files done, guide status) |
+| Rule          | Value                                                                          |
+| ------------- | ------------------------------------------------------------------------------ |
+| Language      | Arabic (RTL) for explanations, LTR for code                                    |
+| Commit style  | `docs(courseXX): ...` / `feat(project): ...` / `fix(...): ...`                 |
+| Folder naming | `XX_Course_Name` or `00_Projects/XX_Name`                                      |
+| Session start | "Read ROADMAP_STATUS.md + \_COURSE_GUIDE.md and continue from [course/lesson]" |
+| After commit  | Update Current Focus notes (md files done, guide status)                       |
 
 ## Portfolio Projects (`00_Projects/`)
 
-| Project | Folder | Course |
-|---------|--------|--------|
-| Stone Paper Scissors | `00_Projects/01_Stone_Paper_Scissors/` | Early C++ |
-| Math Game | `00_Projects/02_Math_Game/` | Early C++ |
-| Bank System | `00_Projects/03_Bank_System/` | Algorithms L3 |
-| ATM System | `00_Projects/04_ATM_System/` | Algorithms L3+ |
+| Project              | Folder                                 | Course         |
+| -------------------- | -------------------------------------- | -------------- |
+| Stone Paper Scissors | `00_Projects/01_Stone_Paper_Scissors/` | Early C++      |
+| Math Game            | `00_Projects/02_Math_Game/`            | Early C++      |
+| Bank System          | `00_Projects/03_Bank_System/`          | Algorithms L3  |
+| ATM System           | `00_Projects/04_ATM_System/`           | Algorithms L3+ |
 
 ## Do NOT Re-Read Each Session
 

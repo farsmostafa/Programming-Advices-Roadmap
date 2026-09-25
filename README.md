@@ -19,7 +19,7 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 
 ## 📂 Course Progress
 
-### ✅ Completed (01–13)
+### ✅ Completed (01–17)
 
 - ✅ `01 - Programming Foundations Level 1` — Programming mindset and how computers work.
 - ✅ `02 - Algorithms & Problem-Solving Level 1` — First steps in algorithmic thinking and problem solving.
@@ -34,17 +34,17 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 - ✅ `11 - OOP as it Should Be (Applications)`
 - ✅ `12 - Data Structures - Level 1`
 - ✅ `13 - Algorithms & Problem Solving Level 5`
+- ✅ `14 - C# - Level 1` — C# fundamentals, Windows Forms applications, and practical projects.
+- ✅ `15 - Database Level 1 - SQL (Concepts and Practice)` — SQL fundamentals, queries, joins, views, and constraints.
+- ✅ `16 - OOP As It Should Be In C#` — Object-oriented C# practice and reusable class-based projects.
+- ✅ `17 - Database - SQL (Projects & Practice)` — Database projects, queries, and ERD/schema practice.
 
 ### ⏳ In Progress
 
-- ⏳ `14 - C# - Level 1` — Active focus 🔥
+- ⏳ `18 - C# & Database Connectivity (ADO.NET)` — Active focus 🔥
 
 ### 🔒 Not Started (15–24)
 
-- 🔒 `15 - Database Level 1 - SQL (Concepts and Practice)`
-- 🔒 `16 - OOP As It Should Be In C#`
-- 🔒 `17 - Database - SQL (Projects & Practice)`
-- 🔒 `18 - C# & Database Connectivity (ADO.NET)`
 - 🔒 `19 - Full Real Project - DVLD`
 - 🔒 `20 - C# Programming Level 2`
 - 🔒 `21 - Database Level 2 - Concepts & T-SQL`
@@ -57,6 +57,7 @@ by mastering the path from C++ logic to **.NET Core Web API** and **Database Arc
 - 🎮 **Stone Paper Scissors** — First practical application of programming logic.
 - 🔢 **Math Game** — Quick thinking and arithmetic operations.
 - 🎮 **Tic-Tac-Toe** — C# Windows Forms game with single-player and multiplayer modes, rounds, target wins, and score tracking.
+- 🍕 **Make Your Pizza** — C# Windows Forms application for pizza customization, pricing, and order confirmation.
 - 🏦 **Bank System v1.0** — Client records and financial transactions with flat-file databases (Full CRUD).
 - 🏧 **ATM System** — Client authentication, quick/normal withdraw, deposit, and balance check.
 - 🏦 **Bank System OOP Advanced** — Client management, account handling, transactions, and Object-Oriented design practice. _README in progress._
