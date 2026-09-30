@@ -18,3 +18,15 @@ x64/
 *.ipch
 *.sdf
 *.sln.doccontainers
+
+# Build outputs
+bin/
+obj/
+
+# Local videos
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.wmv
+*.webm
