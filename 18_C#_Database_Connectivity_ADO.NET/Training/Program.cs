@@ -12,7 +12,7 @@ namespace Training
 {
     internal class Program
     {
-        static string connectionString = "Server=.;Database=ContactsDB;Integrated Security=True;";
+        static string connectionString = "Server=.;Database=ContactDB1;User Id=sa;Password=123456";
 
         struct stContact
         {
